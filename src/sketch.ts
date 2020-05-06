@@ -21,13 +21,13 @@ const SEPARATION_THRESHOLD = 25;
 const MAX_SPEED = 3;
 const MAX_ACCEL = 0.05;
 
-const X_DIM = 640;
-const Y_DIM = 640;
-const FRAME_RATE = 30;
+const X_DIM = 1000;
+const Y_DIM = 1000;
+const FRAME_RATE = 60;
 
 export function setup(sketch: p5): State {
   const RANDOM_SEED = 3;
-  const NUM_BOIDS = 100;
+  const NUM_BOIDS = 400;
 
   sketch.createCanvas(X_DIM, Y_DIM);
   sketch.frameRate(FRAME_RATE);
@@ -79,8 +79,6 @@ function maintainDistance(boid: Boid, flock: Boid[]): Vector {
   if (weightedNeighborVector.length() > 0) return weightedNeighborVector.unit();
   // If no one else is around, keep on keeping on
   else return boid.v;
-
-  // return weightedNeighborVector;
 }
 
 // Alignment
@@ -213,12 +211,44 @@ export function updateState(state: State): State {
   };
 }
 
+function drawBoid(sketch: p5, boid: Boid) {
+  const speed = boid.v.length();
+  const theta = boid.v.angle() - sketch.radians(90);
+  // sketch.fill(127);
+  sketch.stroke(0);
+  const color = sketch.color(
+    `hsb(${(5 * sketch.frameCount) % 360}, 100%, ${Math.floor(
+      (speed / MAX_SPEED) * 100
+    )}%)`
+  );
+  sketch.fill(color);
+
+  {
+    sketch.push();
+    sketch.translate(boid.p.x, boid.p.y);
+    sketch.rotate(theta);
+
+    {
+      sketch.beginShape();
+      const scale = -SEPARATION_THRESHOLD / 4;
+      // Top
+      sketch.vertex(0, -scale);
+      // Left
+      sketch.vertex(-scale / 2, scale);
+      // Right
+      sketch.vertex(scale / 2, scale);
+      sketch.endShape(sketch.CLOSE);
+    }
+    sketch.pop();
+  }
+}
+
 export function draw(sketch: p5, state: State) {
   sketch.background(255);
   // sketch.background(220);
 
-  const red = sketch.color(255, 0, 0);
-  const green = sketch.color(0, 255, 0);
+  // const red = sketch.color(255, 0, 0);
+  // const green = sketch.color(0, 255, 0);
   const white = sketch.color(255, 255, 255);
 
   sketch.fill(220);
@@ -227,27 +257,27 @@ export function draw(sketch: p5, state: State) {
   const boid0 = state.boids[50];
   for (const boid of state.boids) {
     sketch.fill(white);
-    // Debug
-    if (boid.id === 50) {
-      sketch.fill(sketch.color(0, 0, 0, 0));
-      // Big flock circle
-      sketch.circle(boid.p.x, boid.p.y, FLOCK_THRESHOLD * 2);
-      // Small proximity circle
-      sketch.circle(boid.p.x, boid.p.y, SEPARATION_THRESHOLD * 2);
+    //// Debug
+    //if (boid.id === 50) {
+    //  sketch.fill(sketch.color(0, 0, 0, 0));
+    //  // Big flock circle
+    //  sketch.circle(boid.p.x, boid.p.y, FLOCK_THRESHOLD * 2);
+    //  // Small proximity circle
+    //  sketch.circle(boid.p.x, boid.p.y, SEPARATION_THRESHOLD * 2);
 
-      sketch.fill(red);
-    } else if (isNeighbor(boid0, boid)) {
-      sketch.fill(green);
-    }
-
-    // Circle with heading
-    sketch.circle(boid.p.x, boid.p.y, SEPARATION_THRESHOLD / 4);
-    sketch.line(
-      boid.p.x,
-      boid.p.y,
-      boid.p.x + boid.v.x * 5,
-      boid.p.y + boid.v.y * 5
-    );
+    //  sketch.fill(red);
+    //} else if (isNeighbor(boid0, boid)) {
+    //  sketch.fill(green);
+    //}
+    drawBoid(sketch, boid);
+    // // Circle with heading
+    // sketch.circle(boid.p.x, boid.p.y, SEPARATION_THRESHOLD / 4);
+    // sketch.line(
+    //   boid.p.x,
+    //   boid.p.y,
+    //   boid.p.x + boid.v.x * 5,
+    //   boid.p.y + boid.v.y * 5
+    // );
   }
 
   return state;
