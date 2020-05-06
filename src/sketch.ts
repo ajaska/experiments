@@ -197,11 +197,6 @@ export function updateState(state: State): State {
 
       let p = boid.p.add(v);
 
-      // if (p.x > X_DIM) p.x -= X_DIM;
-      // if (p.x < 0) p.x += X_DIM;
-      // if (p.y > Y_DIM) p.y -= Y_DIM;
-      // if (p.y < 0) p.y += Y_DIM;
-
       return {
         ...boid,
         p,
@@ -214,8 +209,7 @@ export function updateState(state: State): State {
 function drawBoid(sketch: p5, boid: Boid) {
   const speed = boid.v.length();
   const theta = boid.v.angle() - sketch.radians(90);
-  // sketch.fill(127);
-  sketch.stroke(0);
+  sketch.stroke(64);
   const color = sketch.color(
     `hsb(${(5 * sketch.frameCount) % 360}, 100%, ${Math.floor(
       (speed / MAX_SPEED) * 100
