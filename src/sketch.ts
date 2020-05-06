@@ -121,8 +121,8 @@ function forceInBounds(point: Point): Point | null {
 function moveTowardsMouse(mouse: Point, boid: Boid): Vector {
   if (mouse.x > 0 && mouse.x < X_DIM && mouse.y > 0 && mouse.y < Y_DIM) {
     const vector = boid.p.toPoint(mouse);
-    if (vector.length() < X_DIM / 4) {
-      return vector;
+    if (vector.length() < X_DIM / 6) {
+      return vector.unit();
     }
   }
   return boid.v; // new Vector(0, 0);
@@ -176,7 +176,7 @@ function newBoidVector(boid: Boid, state: State): Vector {
   const mouse = new Point(state.p5.mouseX, state.p5.mouseY);
   if (mouse.x > 0 && mouse.x < X_DIM && mouse.y > 0 && mouse.y < Y_DIM) {
     vectors.push(
-      computeSteer(boid, moveTowardsMouse(mouse, boid).multiply(-1.5))
+      computeSteer(boid, moveTowardsMouse(mouse, boid)).multiply(-2.4)
     );
   }
 
@@ -199,7 +199,8 @@ export function updateState(state: State): State {
     ...state,
     boids: state.boids.map((boid) => {
       const dv = newBoidVector(boid, state);
-      const v = boid.v.add(dv).limit(MAX_SPEED);
+      let v = boid.v.add(dv).limit(MAX_SPEED);
+      // if (v.length() < 0.05) v = boid.v;
       const p = boid.p.add(v);
       const p2 = forceInBounds(p);
 
@@ -212,6 +213,7 @@ export function updateState(state: State): State {
   };
 }
 
+const scale = (-SEPARATION_THRESHOLD / 4) * 1.5;
 function drawBoid(sketch: p5, boid: Boid) {
   const theta = boid.v.angle() - sketch.radians(90);
 
@@ -222,7 +224,6 @@ function drawBoid(sketch: p5, boid: Boid) {
 
     {
       sketch.beginShape();
-      const scale = -SEPARATION_THRESHOLD / 4;
       // Top
       sketch.vertex(0, -scale);
       // Left
