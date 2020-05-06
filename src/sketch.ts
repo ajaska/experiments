@@ -21,13 +21,13 @@ const SEPARATION_THRESHOLD = 25;
 const MAX_SPEED = 3;
 const MAX_ACCEL = 0.05;
 
-const X_DIM = 1000;
-const Y_DIM = 1000;
+const X_DIM = 800;
+const Y_DIM = 800;
 const FRAME_RATE = 60;
 
 export function setup(sketch: p5): State {
   const RANDOM_SEED = 3;
-  const NUM_BOIDS = 400;
+  const NUM_BOIDS = 200;
 
   sketch.createCanvas(X_DIM, Y_DIM);
   sketch.frameRate(FRAME_RATE);
@@ -65,11 +65,11 @@ function maintainDistance(boid: Boid, flock: Boid[]): Vector {
   let weightedNeighborVector = new Vector(0, 0);
 
   for (const flockMate of flock) {
-    const distance = boid.p.distance(flockMate.p);
-    if (distance > 0 && distance < SEPARATION_THRESHOLD) {
-      // This is the direction away from the neighbor
-      let direction = flockMate.p.toPoint(boid.p);
+    // This is the direction away from the neighbor
+    let direction = flockMate.p.toPoint(boid.p);
 
+    const distance = direction.length();
+    if (distance > 0 && distance < SEPARATION_THRESHOLD) {
       // The closer they are, the more we need to avoid them.
       direction = direction.unit().divide(distance);
       weightedNeighborVector = weightedNeighborVector.add(direction);
@@ -111,33 +111,25 @@ function stayInBounds(boid: Boid): Vector {
 }
 
 // Return: a vector with your new desired velocity
-function moveTowardsMouse(sketch: p5, boid: Boid): Vector {
-  let { mouseX, mouseY } = sketch;
-  const mouse = new Point(mouseX, mouseY);
-  if (mouseX > 0 && mouseX < X_DIM && mouseY > 0 && mouseY < Y_DIM) {
+function moveTowardsMouse(mouse: Point, boid: Boid): Vector {
+  if (mouse.x > 0 && mouse.x < X_DIM && mouse.y > 0 && mouse.y < Y_DIM) {
     return boid.p.toPoint(mouse);
   }
   return boid.v; // new Vector(0, 0);
 }
 
+const MAX_ANGLE_DIFF = (Math.PI * 3) / 4;
+const PI_2 = 2 * Math.PI;
 function isNeighbor(boid: Boid, otherBoid: Boid): boolean {
-  let x = otherBoid.p.x - boid.p.x;
-  let y = otherBoid.p.y - boid.p.y;
-
-  const R = Math.sqrt(x * x + y * y);
-
-  if (R > FLOCK_THRESHOLD) return false;
-
-  const A = Math.atan2(y, x);
-
-  const boidAngle = Math.atan2(boid.v.y, boid.v.x);
+  const vector = boid.p.toPoint(otherBoid.p);
+  if (vector.length() > FLOCK_THRESHOLD) return false;
 
   // Normalized angle diff (in radians)
-  let angleDiff = A - boidAngle;
-  if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
-  if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+  let angleDiff = vector.angle() - boid.v.angle();
+  if (angleDiff > Math.PI) angleDiff -= PI_2;
+  if (angleDiff < -Math.PI) angleDiff += PI_2;
 
-  return Math.abs(angleDiff) < (Math.PI * 3) / 4;
+  return Math.abs(angleDiff) < MAX_ANGLE_DIFF;
 }
 
 function computeSteer(boid: Boid, desired: Vector) {
@@ -166,11 +158,17 @@ function newBoidVector(boid: Boid, state: State): Vector {
 
   let vectors: Vector[] = [
     computeSteer(boid, stayInBounds(boid)).multiply(2),
-    computeSteer(boid, moveTowardsMouse(state.p5, boid).multiply(1.5)),
 
     // Use all boids; boids can sense behind them, for proximity
     computeSteer(boid, maintainDistance(boid, state.boids)).multiply(3),
   ];
+
+  const mouse = new Point(state.p5.mouseX, state.p5.mouseY);
+  if (mouse.x > 0 && mouse.x < X_DIM && mouse.y > 0 && mouse.y < Y_DIM) {
+    vectors.push(
+      computeSteer(boid, moveTowardsMouse(mouse, boid).multiply(-1.5))
+    );
+  }
 
   if (flock.length > 0) {
     vectors = [
@@ -191,11 +189,8 @@ export function updateState(state: State): State {
     ...state,
     boids: state.boids.map((boid) => {
       const dv = newBoidVector(boid, state);
-
-      let v = boid.v.add(dv);
-      v = v.limit(MAX_SPEED);
-
-      let p = boid.p.add(v);
+      const v = boid.v.add(dv).limit(MAX_SPEED);
+      const p = boid.p.add(v);
 
       return {
         ...boid,
@@ -207,15 +202,7 @@ export function updateState(state: State): State {
 }
 
 function drawBoid(sketch: p5, boid: Boid) {
-  const speed = boid.v.length();
   const theta = boid.v.angle() - sketch.radians(90);
-  sketch.stroke(64);
-  const color = sketch.color(
-    `hsb(${(5 * sketch.frameCount) % 360}, 100%, ${Math.floor(
-      (speed / MAX_SPEED) * 100
-    )}%)`
-  );
-  sketch.fill(color);
 
   {
     sketch.push();
@@ -239,39 +226,23 @@ function drawBoid(sketch: p5, boid: Boid) {
 
 export function draw(sketch: p5, state: State) {
   sketch.background(255);
-  // sketch.background(220);
-
-  // const red = sketch.color(255, 0, 0);
-  // const green = sketch.color(0, 255, 0);
-  const white = sketch.color(255, 255, 255);
-
   sketch.fill(220);
   sketch.circle(X_DIM / 2, Y_DIM / 2, Math.max(X_DIM, Y_DIM));
 
-  const boid0 = state.boids[50];
-  for (const boid of state.boids) {
-    sketch.fill(white);
-    //// Debug
-    //if (boid.id === 50) {
-    //  sketch.fill(sketch.color(0, 0, 0, 0));
-    //  // Big flock circle
-    //  sketch.circle(boid.p.x, boid.p.y, FLOCK_THRESHOLD * 2);
-    //  // Small proximity circle
-    //  sketch.circle(boid.p.x, boid.p.y, SEPARATION_THRESHOLD * 2);
+  sketch.fill(255, 0, 0);
+  sketch.circle(sketch.mouseX, sketch.mouseY, 4);
 
-    //  sketch.fill(red);
-    //} else if (isNeighbor(boid0, boid)) {
-    //  sketch.fill(green);
-    //}
+  const color = sketch.color(
+    `hsb(${(3 * sketch.frameCount) % 360}, 100%, ${Math.floor(
+      100
+      // (speed / MAX_SPEED) * 100
+    )}%)`
+  );
+  sketch.fill(color);
+  sketch.stroke(64);
+
+  for (const boid of state.boids) {
     drawBoid(sketch, boid);
-    // // Circle with heading
-    // sketch.circle(boid.p.x, boid.p.y, SEPARATION_THRESHOLD / 4);
-    // sketch.line(
-    //   boid.p.x,
-    //   boid.p.y,
-    //   boid.p.x + boid.v.x * 5,
-    //   boid.p.y + boid.v.y * 5
-    // );
   }
 
   return state;

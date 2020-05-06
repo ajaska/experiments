@@ -47,6 +47,10 @@ export class Vector {
   y: number;
   z: number;
 
+  _length?: number;
+  _unit?: Vector;
+  _angle?: number;
+
   constructor(x: number, y: number, z?: number) {
     if (isNaN(x) || isNaN(y) || isNaN(z || 0)) {
       throw new Error("Vector cannot have NaN");
@@ -106,16 +110,16 @@ export class Vector {
   }
 
   length() {
-    return Math.sqrt(this.dot(this));
+    return this._length || (this._length = Math.sqrt(this.dot(this)));
   }
 
   unit() {
-    return this.divide(this.length());
+    return this._unit || (this._unit = this.divide(this.length()));
   }
 
   // 2d-angle
   angle() {
-    return Math.atan2(this.y, this.x);
+    return this._angle || (this._angle = Math.atan2(this.y, this.x));
   }
 
   limit(n: number) {
