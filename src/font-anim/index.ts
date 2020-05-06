@@ -87,7 +87,7 @@ function slideyBoi() {
     div1.style.top = "4px";
     // div1.style.top = "0px";
     div1.style.left = "4px";
-    div1.innerText = "@ajaska";
+    div1.innerText = "(´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
     app.appendChild(div1);
   }, 0);
 
@@ -102,7 +102,7 @@ function slideyBoi() {
     // div2.style.top = "8px";
     div2.style.top = "0px";
     div2.style.left = "8px";
-    div2.innerText = "@ajaska";
+    div2.innerText = "(´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
     app.appendChild(div2);
   }, 50);
 
@@ -118,7 +118,7 @@ function slideyBoi() {
     div3.style.top = "12px";
     // div3.style.top = "0px";
     div3.style.left = "12px";
-    div3.innerText = "@ajaska";
+    div3.innerText = "(´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
     app.appendChild(div3);
   }, 100);
 
@@ -134,7 +134,7 @@ function slideyBoi() {
     div4.style.top = "16px";
     // div4.style.top = "0px";
     div4.style.left = "16px";
-    div4.innerText = "@ajaska";
+    div4.innerText = "(´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
     app.appendChild(div4);
   }, 150);
 
