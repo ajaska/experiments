@@ -90,9 +90,8 @@ function matchVelocity(_boid: Boid, flock: Boid[]): Vector {
 }
 
 // Return: a vector with your new desired velocity
+const center = new Point(X_DIM / 2, Y_DIM / 2);
 function stayInBounds(boid: Boid): Vector {
-  const center = new Point(X_DIM / 2, Y_DIM / 2);
-
   const threshold = X_DIM / 4;
   const distance = center.distance(boid.p);
   if (distance > threshold) {
@@ -110,10 +109,21 @@ function stayInBounds(boid: Boid): Vector {
   return boid.v;
 }
 
+function forceInBounds(point: Point): Point | null {
+  const direction = center.toPoint(point);
+  if (direction.length() > X_DIM / 2) {
+    return center.add(direction.limit(X_DIM / 2));
+  }
+  return null;
+}
+
 // Return: a vector with your new desired velocity
 function moveTowardsMouse(mouse: Point, boid: Boid): Vector {
   if (mouse.x > 0 && mouse.x < X_DIM && mouse.y > 0 && mouse.y < Y_DIM) {
-    return boid.p.toPoint(mouse);
+    const vector = boid.p.toPoint(mouse);
+    if (vector.length() < X_DIM / 4) {
+      return vector;
+    }
   }
   return boid.v; // new Vector(0, 0);
 }
@@ -191,10 +201,11 @@ export function updateState(state: State): State {
       const dv = newBoidVector(boid, state);
       const v = boid.v.add(dv).limit(MAX_SPEED);
       const p = boid.p.add(v);
+      const p2 = forceInBounds(p);
 
       return {
         ...boid,
-        p,
+        p: p2 || p,
         v,
       };
     }),
