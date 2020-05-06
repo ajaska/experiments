@@ -1,15 +1,11 @@
 import p5 from "p5";
 
-interface Vector {
-  dx: number;
-  dy: number;
-}
+import { Vector, Point } from "./Vector";
 
 interface Boid {
   id: number;
 
-  x: number;
-  y: number;
+  p: Point;
   v: Vector;
 }
 
@@ -19,22 +15,19 @@ export interface State {
   p5: p5;
 }
 
-const NEARBY_THRESHOLD = 50;
-const FLOCKING_FACTOR = 0.005;
-const DISTANCE_THRESHOLD = 20;
-const MATCHING_FACTOR = 0.25; //0.125;
+const FLOCK_THRESHOLD = 50;
+const SEPARATION_THRESHOLD = 25;
 
-const X_DIM = 600;
-const Y_DIM = 600;
+const MAX_SPEED = 3;
+const MAX_ACCEL = 0.05;
 
-let dist: (x1: number, y1: number, x2: number, y2: number) => number;
+const X_DIM = 640;
+const Y_DIM = 640;
+const FRAME_RATE = 30;
 
 export function setup(sketch: p5): State {
-  dist = sketch.dist;
-
-  const RANDOM_SEED = 4;
+  const RANDOM_SEED = 3;
   const NUM_BOIDS = 100;
-  const FRAME_RATE = 30;
 
   sketch.createCanvas(X_DIM, Y_DIM);
   sketch.frameRate(FRAME_RATE);
@@ -45,206 +38,175 @@ export function setup(sketch: p5): State {
   for (let i = 0; i < NUM_BOIDS; i++) {
     boids.push({
       id: i,
-      x: sketch.random(0, X_DIM),
-      y: sketch.random(0, Y_DIM),
-      v: {
-        dx: sketch.random(-5, 5),
-        dy: sketch.random(-5, 5),
-      },
+      p: new Point(sketch.random(0, X_DIM), sketch.random(0, Y_DIM)),
+      v: Vector.fromAngles(0, sketch.random(0, 2 * Math.PI)).multiply(
+        sketch.random(0, MAX_SPEED)
+      ),
     });
   }
 
   return { boids, p5: undefined } as any;
 }
 
-// Returns a vector diff for Rule 1
-function flyToCenterOfFlock(boid: Boid, otherBoids: Boid[]): Vector {
-  let flockX = 0;
-  let flockY = 0;
+// Cohesion
+// Return: a vector with your new desired velocity
+function flyToCenterOfFlock(boid: Boid, flock: Boid[]): Vector {
+  const flockCenter = Point.averageOfPoints(flock.map((f) => f.p));
 
-  // Compute average of positions
-  for (const otherBoid of otherBoids) {
-    flockX += otherBoid.x;
-    flockY += otherBoid.y;
-  }
-  flockX /= otherBoids.length;
-  flockY /= otherBoids.length;
+  // Compute vector to direction
+  const vector = boid.p.toPoint(flockCenter);
 
-  // Compute vector difference
-  let dx = flockX - boid.x;
-  let dy = flockY - boid.y;
-
-  // Scale by flocking factor (%) in that direction
-  dx *= FLOCKING_FACTOR;
-  dy *= FLOCKING_FACTOR;
-
-  return { dx, dy };
+  return vector.unit();
 }
 
-// Returns a vector diff for Rule 2
-function maintainDistance(boid: Boid, otherBoids: Boid[]): Vector {
-  let pushV = { dx: 0, dy: 0 };
-  for (const otherBoid of otherBoids) {
-    const d = dist(boid.x, boid.y, otherBoid.x, otherBoid.y);
-    if (d < DISTANCE_THRESHOLD) {
-      pushV.dx -= (otherBoid.x - boid.x) / d;
-      pushV.dy -= (otherBoid.y - boid.y) / d;
+// Separation
+// Return: a vector with your new desired velocity
+function maintainDistance(boid: Boid, flock: Boid[]): Vector {
+  let weightedNeighborVector = new Vector(0, 0);
+
+  for (const flockMate of flock) {
+    const distance = boid.p.distance(flockMate.p);
+    if (distance > 0 && distance < SEPARATION_THRESHOLD) {
+      // This is the direction away from the neighbor
+      let direction = flockMate.p.toPoint(boid.p);
+
+      // The closer they are, the more we need to avoid them.
+      direction = direction.unit().divide(distance);
+      weightedNeighborVector = weightedNeighborVector.add(direction);
     }
   }
 
-  // pushV.dx /= 15;
-  // pushV.dy /= 15;
+  if (weightedNeighborVector.length() > 0) return weightedNeighborVector.unit();
+  // If no one else is around, keep on keeping on
+  else return boid.v;
 
-  return pushV;
+  // return weightedNeighborVector;
 }
 
-// Rule 3
-function matchVelocity(boid: Boid, otherBoids: Boid[]): Vector {
-  let v = { dx: 0, dy: 0 };
+// Alignment
+// Return: a vector with your new desired velocity
+function matchVelocity(_boid: Boid, flock: Boid[]): Vector {
+  const flockVelocity = Vector.averageOfVectors(flock.map((f) => f.v));
 
-  // Calculate average velocity
-  for (const otherBoid of otherBoids) {
-    v.dx += otherBoid.v.dx;
-    v.dy += otherBoid.v.dy;
-  }
-  v.dx /= otherBoids.length;
-  v.dy /= otherBoids.length;
-
-  // Compute delta
-  v.dx = v.dx - boid.v.dx;
-  v.dy = v.dy - boid.v.dy;
-
-  // Scale
-  v.dx *= MATCHING_FACTOR;
-  v.dy *= MATCHING_FACTOR;
-
-  return v;
+  return flockVelocity.unit();
 }
 
+// Return: a vector with your new desired velocity
 function stayInBounds(boid: Boid): Vector {
-  let v = { dx: 0, dy: 0 };
+  const center = new Point(X_DIM / 2, Y_DIM / 2);
 
-  if (boid.x < 10) v.dx += 10;
-  if (boid.y < 10) v.dy += 10;
-  if (boid.x > X_DIM - 10) v.dx -= 10;
-  if (boid.y > Y_DIM - 10) v.dy -= 10;
+  const threshold = X_DIM / 4;
+  const distance = center.distance(boid.p);
+  if (distance > threshold) {
+    const direction = boid.p.toPoint(center).unit();
+    const maxForceAt = X_DIM / 3;
+    const lerped = (distance - threshold) / (maxForceAt - threshold);
+    // const lerped = 1; //(distance - threshold) / (maxForceAt - threshold);
+    const scaled = direction.multiply(lerped);
 
-  return v;
+    // // Since we're building a force, we need to just add it to our velocity
+    return scaled.add(boid.v);
+    // return scaled;
+  }
+  // Since we're building a force, we need to just return our velocity
+  return boid.v;
 }
 
-function moveTowardsMouse(boid: Boid, mouseX: number, mouseY: number): Vector {
+// Return: a vector with your new desired velocity
+function moveTowardsMouse(sketch: p5, boid: Boid): Vector {
+  let { mouseX, mouseY } = sketch;
+  const mouse = new Point(mouseX, mouseY);
   if (mouseX > 0 && mouseX < X_DIM && mouseY > 0 && mouseY < Y_DIM) {
-    return {
-      dx: (mouseX - boid.x) / 10000,
-      dy: (mouseY - boid.y) / 10000,
-    };
+    return boid.p.toPoint(mouse);
   }
-  return { dx: 0, dy: 0 };
+  return boid.v; // new Vector(0, 0);
 }
 
 function isNeighbor(boid: Boid, otherBoid: Boid): boolean {
-  let x = otherBoid.x - boid.x;
-
-  // if (x > X_DIM / 2) {
-  //   x = X_DIM - x;
-  // } else if (x < -X_DIM / 2) {
-  //   x = -x - X_DIM;
-  // }
-  // if (x > X_DIM / 2) x = X_DIM - x;
-  // x = Math.min(Math.abs(x), Math.abs(x + X_DIM), Math.abs(x - X_DIM));
-  let y = otherBoid.y - boid.y;
-
-  // if (y > Y_DIM / 2) {
-  //   y = Y_DIM - y;
-  // } else if (y < -Y_DIM / 2) {
-  //   y = -y - Y_DIM;
-  // }
-  // y = Math.min(Math.abs(y), Math.abs(y + Y_DIM), Math.abs(y - Y_DIM));
-  // if (y > Y_DIM / 2) y = Y_DIM - y;
+  let x = otherBoid.p.x - boid.p.x;
+  let y = otherBoid.p.y - boid.p.y;
 
   const R = Math.sqrt(x * x + y * y);
 
-  if (R > NEARBY_THRESHOLD) return false;
+  if (R > FLOCK_THRESHOLD) return false;
 
   const A = Math.atan2(y, x);
 
-  const boidAngle = Math.atan2(boid.v.dy, boid.v.dx);
+  const boidAngle = Math.atan2(boid.v.y, boid.v.x);
 
   // Normalized angle diff (in radians)
   let angleDiff = A - boidAngle;
   if (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
   if (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
 
-  return Math.abs(angleDiff) < (Math.PI * 2) / 4;
+  return Math.abs(angleDiff) < (Math.PI * 3) / 4;
+}
+
+function computeSteer(boid: Boid, desired: Vector) {
+  if (desired.length() === 0) {
+    return new Vector(0, 0);
+  }
+
+  // Compute max velocity in desired direction
+  // let nVector = vector.length() > 1 ? vector.unit() : vector;
+  // let normalizedDesire = desired.unit().multiply(MAX_SPEED);
+  let normalizedDesire = desired.limit(1).multiply(MAX_SPEED);
+
+  // Compute difference
+  let steer = normalizedDesire.subtract(boid.v);
+
+  // Limit how fast we can change our velocity (inertia?)
+  steer = steer.limit(MAX_ACCEL);
+
+  return steer;
 }
 
 function newBoidVector(boid: Boid, state: State): Vector {
-  const otherBoids = state.boids
+  const flock = state.boids
     .filter((someBoid) => boid.id !== someBoid.id)
-    .filter(
-      (someBoid) => isNeighbor(boid, someBoid)
-      // dist(someBoid.x, someBoid.y, boid.x, boid.y) < NEARBY_THRESHOLD
-    );
+    .filter((someBoid) => isNeighbor(boid, someBoid));
 
-  let vectors: Vector[] = [];
-  if (otherBoids.length === 0) {
-    // vectors = [stayInBounds(boid)];
-  } else {
+  let vectors: Vector[] = [
+    computeSteer(boid, stayInBounds(boid)).multiply(2),
+    computeSteer(boid, moveTowardsMouse(state.p5, boid).multiply(1.5)),
+
+    // Use all boids; boids can sense behind them, for proximity
+    computeSteer(boid, maintainDistance(boid, state.boids)).multiply(3),
+  ];
+
+  if (flock.length > 0) {
     vectors = [
-      flyToCenterOfFlock(boid, otherBoids),
-      maintainDistance(boid, otherBoids),
-      matchVelocity(boid, otherBoids),
-      // stayInBounds(boid),
+      ...vectors,
+      computeSteer(boid, flyToCenterOfFlock(boid, flock)),
+      computeSteer(boid, matchVelocity(boid, flock)),
     ];
   }
 
-  vectors = [
-    ...vectors,
-    moveTowardsMouse(boid, state.p5.mouseX, state.p5.mouseY),
-  ];
-  // console.log("boid.id", boid.id, vectors);
-
   // Sum vectors
-  return vectors.reduce(
-    (prev: Vector, curr: Vector) => ({
-      dx: prev.dx + curr.dx,
-      dy: prev.dy + curr.dy,
-    }),
-    { dx: 0, dy: 0 }
-  );
-}
-
-function velocityLimiter(v: Vector): Vector {
-  return {
-    dx: Math.max(Math.min(v.dx, 10), -10),
-    dy: Math.max(Math.min(v.dy, 10), -10),
-  };
+  return vectors.reduce((prev: Vector, curr: Vector) => {
+    return prev.add(curr);
+  }, new Vector(0, 0));
 }
 
 export function updateState(state: State): State {
   return {
     ...state,
     boids: state.boids.map((boid) => {
-      let v = newBoidVector(boid, state);
+      const dv = newBoidVector(boid, state);
 
-      v.dx += boid.v.dx;
-      v.dy += boid.v.dy;
+      let v = boid.v.add(dv);
+      v = v.limit(MAX_SPEED);
 
-      v = velocityLimiter(v);
+      let p = boid.p.add(v);
 
-      let x = boid.x + v.dx;
-      let y = boid.y + v.dy;
+      // if (p.x > X_DIM) p.x -= X_DIM;
+      // if (p.x < 0) p.x += X_DIM;
+      // if (p.y > Y_DIM) p.y -= Y_DIM;
+      // if (p.y < 0) p.y += Y_DIM;
 
-      if (x > X_DIM) x -= X_DIM;
-      if (x < 0) x += X_DIM;
-      if (y > Y_DIM) y -= Y_DIM;
-      if (y < 0) y += Y_DIM;
-
-      // console.log(v);
       return {
         ...boid,
-        x, // : boid.x + v.dx,
-        y, // : boid.y + v.dy,
+        p,
         v,
       };
     }),
@@ -252,24 +214,40 @@ export function updateState(state: State): State {
 }
 
 export function draw(sketch: p5, state: State) {
-  sketch.background(220);
+  sketch.background(255);
+  // sketch.background(220);
 
   const red = sketch.color(255, 0, 0);
   const green = sketch.color(0, 255, 0);
   const white = sketch.color(255, 255, 255);
 
+  sketch.fill(220);
+  sketch.circle(X_DIM / 2, Y_DIM / 2, Math.max(X_DIM, Y_DIM));
+
   const boid0 = state.boids[50];
-  // console.log(boid0);
   for (const boid of state.boids) {
     sketch.fill(white);
+    // Debug
     if (boid.id === 50) {
+      sketch.fill(sketch.color(0, 0, 0, 0));
+      // Big flock circle
+      sketch.circle(boid.p.x, boid.p.y, FLOCK_THRESHOLD * 2);
+      // Small proximity circle
+      sketch.circle(boid.p.x, boid.p.y, SEPARATION_THRESHOLD * 2);
+
       sketch.fill(red);
     } else if (isNeighbor(boid0, boid)) {
       sketch.fill(green);
     }
 
-    sketch.circle(boid.x, boid.y, DISTANCE_THRESHOLD / 2);
-    sketch.line(boid.x, boid.y, boid.x + boid.v.dx * 5, boid.y + boid.v.dy * 5);
+    // Circle with heading
+    sketch.circle(boid.p.x, boid.p.y, SEPARATION_THRESHOLD / 4);
+    sketch.line(
+      boid.p.x,
+      boid.p.y,
+      boid.p.x + boid.v.x * 5,
+      boid.p.y + boid.v.y * 5
+    );
   }
 
   return state;
