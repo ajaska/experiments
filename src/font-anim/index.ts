@@ -11,9 +11,12 @@ const TRANSPARENT = "rgba(0, 0, 0, 0)";
 const WHITE = "#ffffff";
 const BLUE = "#0000ff";
 
+const TEXT = "(*´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
+
 function fontAnim() {
   const container = document.getElementById("mainText");
   if (!container) throw new Error("Couldn't find text");
+  container.innerText = TEXT;
 
   const beat = frame % 4;
   const measure = Math.floor(frame / 4);
@@ -78,7 +81,8 @@ function slideyBoi() {
   const div3 = document.createElement("div");
   const div4 = document.createElement("div");
   setTimeout(() => {
-    div1.style.color = BLUE;
+    div1.style.setProperty("-webkit-text-stroke", `2px ${BLUE}`);
+    div1.style.color = TRANSPARENT;
     div1.style.backgroundColor = TRANSPARENT;
     div1.style.fontStyle = "normal";
     div1.style.fontSize = "144px";
@@ -87,8 +91,7 @@ function slideyBoi() {
     div1.style.top = "4px";
     // div1.style.top = "0px";
     div1.style.left = "4px";
-    div1.innerText = "(´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
-    div1.innerText = "【=◈︿◈=】";
+    div1.innerText = TEXT;
     app.appendChild(div1);
   }, 0);
 
@@ -100,11 +103,10 @@ function slideyBoi() {
     div2.style.fontSize = "144px";
     div2.style.fontWeight = String(WEIGHTS[1]);
     div2.style.position = "absolute";
-    // div2.style.top = "8px";
-    div2.style.top = "0px";
+    div2.style.top = "8px";
+    // div2.style.top = "0px";
     div2.style.left = "8px";
-    div2.innerText = "(´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
-    div2.innerText = "【=◈︿◈=】";
+    div2.innerText = TEXT;
     app.appendChild(div2);
   }, 50);
 
@@ -120,8 +122,7 @@ function slideyBoi() {
     div3.style.top = "12px";
     // div3.style.top = "0px";
     div3.style.left = "12px";
-    div3.innerText = "(´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
-    div3.innerText = "【=◈︿◈=】";
+    div3.innerText = TEXT;
     app.appendChild(div3);
   }, 100);
 
@@ -137,8 +138,7 @@ function slideyBoi() {
     div4.style.top = "16px";
     // div4.style.top = "0px";
     div4.style.left = "16px";
-    div4.innerText = "(´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
-    div4.innerText = "【=◈︿◈=】";
+    div4.innerText = TEXT;
     app.appendChild(div4);
   }, 150);
 
@@ -157,7 +157,7 @@ function slideyBoi() {
 }
 
 let intervalId: number;
-const BPM = 182;
+const BPM = 106;
 console.log("target bpm", BPM);
 console.log("time between beats", Math.round((60 * 1000) / BPM));
 console.log("best bpm", (60 * 1000) / Math.round((60 * 1000) / BPM));
