@@ -1,1 +1,0 @@
-{"mappings":"AAAA,WACI,oBAAoB,CACpB,+EACJ","sources":["src/font-anim/korataki.css"],"names":[],"version":3,"file":"korataki.df799ee8.css.map","sourcesContent":["@font-face {\n    font-family:Korataki;\n    src:url(\"./fonts/korataki/korataki.woff\") format(\"woff\")\n}\n"]}
