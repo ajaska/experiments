@@ -11,7 +11,7 @@ const TRANSPARENT = "rgba(0, 0, 0, 0)";
 const WHITE = "#ffffff";
 const BLUE = "#0000ff";
 
-const TEXT = "(*´ ✖̥̥̥̥̥﹏✖̥̥̥̥̥)";
+const TEXT = "<!-- @ajaska -->";
 
 function fontAnim() {
   const container = document.getElementById("mainText");
@@ -157,7 +157,7 @@ function slideyBoi() {
 }
 
 let intervalId: number;
-const BPM = 106;
+const BPM = 140;
 console.log("target bpm", BPM);
 console.log("time between beats", Math.round((60 * 1000) / BPM));
 console.log("best bpm", (60 * 1000) / Math.round((60 * 1000) / BPM));
@@ -165,6 +165,9 @@ console.log("best bpm", (60 * 1000) / Math.round((60 * 1000) / BPM));
 const initAnim = (bpm?: number) => {
   // TODO better timing
   if (intervalId != null) clearInterval(intervalId);
+  document.getElementById("bpm-cur")!.innerText = `BPM: ${Math.round(
+    bpm || BPM
+  )}`;
   frame = 0;
   fontAnim();
   intervalId = setInterval(fontAnim, Math.round((60 * 1000) / (bpm || BPM)));

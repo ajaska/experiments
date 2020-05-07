@@ -5,17 +5,18 @@
 
     <title>...</title>
     <link rel="stylesheet" href="./camphor.css">
-    <link rel="stylesheet" href="./korataki.css">
+    <!-- <link rel="stylesheet" href="./korataki.css"> -->
   </head>
 
-  <body style="font-family: Camphor,Korataki;">
+  <body style="font-family: Camphor;">
     <script src="./index.ts"></script>
     <div id="appContainer">
       <div id="mainText" style="font-weight: 400; font-size: 144px; position: absolute; top: 0; left: 0;"></div>
     </div>
     <div style="height: 200px"></div>
     <div style="color: rgba(0,0,0,0.3)">
-      <div>Tap x to count BPM, c to restart animation w/ BPM, s for a slidey boi</div>
+      <div>Tap x to count BPM, c to set BPM, click to restart, s for a slidey boi</div>
+      <div id="bpm-cur" style="z-index: 1;"></div>
       <div id="bpm-avg" style="z-index: 1;"></div>
     </div>
   </body>
