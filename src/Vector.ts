@@ -27,33 +27,102 @@ export class Point {
   }
 
   toPoint(p: Point): Vector {
-    return new Vector(p.x - this.x, p.y - this.y, p.z - this.z);
+    const x = p.x - this.x;
+    const y = p.y - this.y;
+    return new Vector(Math.sqrt(x * x + y * y), Math.atan2(y, x));
   }
 
-  add(v: Vector) {
-    return new Point(this.x + v.x, this.y + v.y, this.z + v.z);
+  add(v: Vector): Point {
+    return new Point(
+      this.x + v.r * Math.cos(v.theta),
+      this.y + v.r * Math.sin(v.theta)
+    );
   }
+
+  // toPoint(p: Point): Vector {
+  //   // return new Vector(p.x - this.x, p.y - this.y, p.z - this.z);
+  //   return new Vector(p.x - this.x, p.y - this.y, p.z - this.z);
+  // }
+
+  // add(v: Vector) {
+  //   return new Point(this.x + v.x, this.y + v.y, this.z + v.z);
+  // }
 
   distance(p: Point): number {
     return this.toPoint(p).length();
   }
 }
 
+export class Vector {
+  r: number;
+  theta: number;
+
+  constructor(r: number, theta: number) {
+    this.r = r;
+
+    while (theta > Math.PI) theta -= Math.PI * 2;
+    while (theta < -Math.PI) theta += Math.PI * 2;
+    this.theta = theta;
+  }
+
+  length() {
+    return this.r;
+  }
+
+  angle() {
+    return this.theta;
+  }
+
+  unit() {
+    return new Vector(1, this.theta);
+  }
+
+  // https://math.stackexchange.com/questions/1365622/adding-two-polar-vectors
+  static sumVectors(vs: Vector[]) {
+    let x = 0;
+    let y = 0;
+    for (const v of vs) {
+      x += v.r * Math.cos(v.theta);
+      y += v.r * Math.sin(v.theta);
+    }
+    return new Vector(Math.sqrt(x * x + y * y), Math.atan2(y, x));
+  }
+
+  divide(n: number) {
+    return new Vector(this.r / n, this.theta);
+  }
+
+  multiply(n: number) {
+    return new Vector(this.r * n, this.theta);
+  }
+
+  limit(n: number) {
+    if (this.r < n) {
+      return this.clone();
+    }
+    return new Vector(n, this.theta);
+  }
+
+  clone() {
+    return new Vector(this.r, this.theta);
+  }
+}
+
 // Provides a simple 3D vector class. Vector operations can be done using member
 // functions, which return new vectors, or static functions, which reuse
 // existing vectors to avoid generating garbage.
-export class Vector {
+export class Vector2D {
   x: number;
   y: number;
   z: number;
 
   _length?: number;
-  _unit?: Vector;
+  _unit?: Vector2D;
   _angle?: number;
 
   constructor(x: number, y: number, z?: number) {
     if (isNaN(x) || isNaN(y) || isNaN(z || 0)) {
-      throw new Error("Vector cannot have NaN");
+      throw new Error("Vector2D cannot have NaN");
     }
 
     this.x = x;
@@ -66,43 +135,43 @@ export class Vector {
   // The methods `add()`, `subtract()`, `multiply()`, and `divide()` can all
   // take either a vector or a number as an argument.
   negative() {
-    return new Vector(-this.x, -this.y, -this.z);
+    return new Vector2D(-this.x, -this.y, -this.z);
   }
 
-  add(v: Vector | number) {
-    if (v instanceof Vector)
-      return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
-    else return new Vector(this.x + v, this.y + v, this.z + v);
+  add(v: Vector2D | number) {
+    if (v instanceof Vector2D)
+      return new Vector2D(this.x + v.x, this.y + v.y, this.z + v.z);
+    else return new Vector2D(this.x + v, this.y + v, this.z + v);
   }
 
-  subtract(v: Vector | number) {
-    if (v instanceof Vector)
-      return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
-    else return new Vector(this.x - v, this.y - v, this.z - v);
+  subtract(v: Vector2D | number) {
+    if (v instanceof Vector2D)
+      return new Vector2D(this.x - v.x, this.y - v.y, this.z - v.z);
+    else return new Vector2D(this.x - v, this.y - v, this.z - v);
   }
 
-  multiply(v: Vector | number) {
-    if (v instanceof Vector)
-      return new Vector(this.x * v.x, this.y * v.y, this.z * v.z);
-    else return new Vector(this.x * v, this.y * v, this.z * v);
+  multiply(v: Vector2D | number) {
+    if (v instanceof Vector2D)
+      return new Vector2D(this.x * v.x, this.y * v.y, this.z * v.z);
+    else return new Vector2D(this.x * v, this.y * v, this.z * v);
   }
 
-  divide(v: Vector | number) {
-    if (v instanceof Vector)
-      return new Vector(this.x / v.x, this.y / v.y, this.z / v.z);
-    else return new Vector(this.x / v, this.y / v, this.z / v);
+  divide(v: Vector2D | number) {
+    if (v instanceof Vector2D)
+      return new Vector2D(this.x / v.x, this.y / v.y, this.z / v.z);
+    else return new Vector2D(this.x / v, this.y / v, this.z / v);
   }
 
-  equals(v: Vector) {
+  equals(v: Vector2D) {
     return this.x == v.x && this.y == v.y && this.z == v.z;
   }
 
-  dot(v: Vector) {
+  dot(v: Vector2D) {
     return this.x * v.x + this.y * v.y + this.z * v.z;
   }
 
-  cross(v: Vector) {
-    return new Vector(
+  cross(v: Vector2D) {
+    return new Vector2D(
       this.y * v.z - this.z * v.y,
       this.z * v.x - this.x * v.z,
       this.x * v.y - this.y * v.x
@@ -144,7 +213,7 @@ export class Vector {
     };
   }
 
-  angleTo(a: Vector) {
+  angleTo(a: Vector2D) {
     return Math.acos(this.dot(a) / (this.length() * a.length()));
   }
 
@@ -153,23 +222,23 @@ export class Vector {
   }
 
   clone() {
-    return new Vector(this.x, this.y, this.z);
+    return new Vector2D(this.x, this.y, this.z);
   }
 
   static fromAngles(theta: number, phi: number) {
-    return new Vector(
+    return new Vector2D(
       Math.cos(theta) * Math.cos(phi),
       Math.sin(phi),
       Math.sin(theta) * Math.cos(phi)
     );
   }
 
-  static averageOfVectors(vectors: Vector[]) {
+  static averageOfVector2Ds(vectors: Vector2D[]) {
     const avgX = vectors.map((p) => p.x).reduce(sumR, 0) / vectors.length;
     const avgY = vectors.map((p) => p.y).reduce(sumR, 0) / vectors.length;
     const avgZ = vectors.map((p) => p.z).reduce(sumR, 0) / vectors.length;
 
-    return new Vector(avgX, avgY, avgZ);
+    return new Vector2D(avgX, avgY, avgZ);
   }
 }
 
