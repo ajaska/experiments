@@ -130,12 +130,12 @@ function stayInBounds(boid: Boid): Goal {
   return null;
 }
 
-function forceInBounds(point: Point): Point | null {
+function forceInBounds(point: Point): Point {
   const direction = center.toPoint(point);
   if (direction.length() > X_DIM / 2) {
     return center.add(direction.limit(X_DIM / 2));
   }
-  return null;
+  return point;
 }
 
 // Return: a vector with your new desired velocity
@@ -155,28 +155,14 @@ function isNeighbor(boid: Boid, otherBoid: Boid): boolean {
   const vector = boid.p.toPoint(otherBoid.p);
   if (vector.length() > FLOCK_THRESHOLD) return false;
 
-  // Normalized angle diff (in radians)
-  let angleDiff = vector.angle() - boid.v.angle();
-  if (angleDiff > Math.PI) angleDiff -= PI_2;
-  if (angleDiff < -Math.PI) angleDiff += PI_2;
-
+  const angleDiff = normAngle(vector.angle() - boid.v.angle());
   return Math.abs(angleDiff) < MAX_ANGLE_DIFF;
 }
 
 function normAngle(theta: number) {
-  while (theta > Math.PI) theta -= Math.PI * 2;
-  while (theta < -Math.PI) theta += Math.PI * 2;
+  while (theta > Math.PI) theta -= PI_2;
+  while (theta < -Math.PI) theta += PI_2;
   return theta;
-}
-
-function clamp(lower: number, value: number, upper: number) {
-  if (value < lower) {
-    return lower;
-  }
-  if (value > upper) {
-    return upper;
-  }
-  return value;
 }
 
 // Compute change in vector
@@ -195,13 +181,9 @@ function computeSteer(boid: Boid, desired: Goal) {
     } else {
       velocity = desired.goal;
 
+      // Should this be here?
       velocity = velocity.limit(MAX_SPEED);
     }
-    // Not sure which of these is better:
-    // This one allows for some force scaling
-    // velocity = velocity.limit(1).multiply(MAX_SPEED);
-    // This one applies all forces maximally?
-    // velocity = velocity.unit().multiply(MAX_SPEED);
     acceleration = Vector.sumVectors([velocity, boid.v.multiply(-1)]);
   } else {
     acceleration = desired.goal;
@@ -247,30 +229,35 @@ function newBoidVector(boid: Boid, state: State): Vector {
   return Vector.sumVectors(vectors);
 }
 
+function limitMaxTurnSpeed(boid: Boid, newV: Vector): Vector {
+  // Limit max turn speed
+  let dAngle = normAngle(newV.angle() - boid.v.angle());
+  let theta = newV.theta;
+  if (dAngle > MAX_TURN_SPEED) {
+    theta = normAngle(boid.v.angle() + MAX_TURN_SPEED);
+    return new Vector(newV.r, theta);
+  }
+  if (dAngle < -MAX_TURN_SPEED) {
+    theta = normAngle(boid.v.angle() - MAX_TURN_SPEED);
+    return new Vector(newV.r, theta);
+  }
+  return newV;
+}
+
 export function updateState(state: State): State {
   return {
     ...state,
     boids: state.boids.map((boid) => {
       const dv = newBoidVector(boid, state);
-      // let v = boid.v.add(dv).limit(MAX_SPEED);
-
       let v = Vector.sumVectors([boid.v, dv]).limit(MAX_SPEED);
+      v = limitMaxTurnSpeed(boid, v);
 
-      // Limit max turn speed
-      let dAngle = normAngle(v.angle() - boid.v.angle());
-      if (dAngle > MAX_TURN_SPEED) {
-        v.theta = normAngle(boid.v.angle() + MAX_TURN_SPEED);
-      }
-      if (dAngle < -MAX_TURN_SPEED) {
-        v.theta = normAngle(boid.v.angle() - MAX_TURN_SPEED);
-      }
-
-      const p = boid.p.add(v);
-      const p2 = forceInBounds(p);
+      let p = boid.p.add(v);
+      p = forceInBounds(p);
 
       return {
         ...boid,
-        p: p2 || p,
+        p,
         v,
       };
     }),
