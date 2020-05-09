@@ -128,6 +128,11 @@ export default function main() {
   // let beatDetektor = new BeatDetektor(80, 120);
   let beatDetektorKick = new BeatDetektor.modules.vis.BassKick();
   let bpm = 0;
+  const kickCircleGeometry = new THREE.CircleGeometry(0.5, 32);
+  var redMaterial = new THREE.LineBasicMaterial({ color: 0xff0000 });
+  const circle = new THREE.Mesh(kickCircleGeometry, redMaterial);
+  circle.position.set(-10, 6, -15);
+  scene.add(circle);
 
   function render(ts: number) {
     features = a.get([
@@ -151,6 +156,9 @@ export default function main() {
         //   beatDetektor.win_val
         // );
         console.log(bpm, beatDetektorKick.isKick());
+        redMaterial.color.setHex(
+          beatDetektorKick.isKick() ? 0xff0000 : 0x000000
+        );
       }
 
       if (chromaWrapper && features.chroma) {
