@@ -32,7 +32,7 @@ export default class Audio {
       audioContext: this.context,
       source: stream,
       bufferSize: bufferSize,
-      windowingFunction: "blackman",
+      // windowingFunction: "blackman",
     });
     this.initializeMicrophoneSampling();
   }

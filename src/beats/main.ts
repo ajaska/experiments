@@ -1,10 +1,13 @@
 import * as THREE from "three";
 
+import BeatDetektor from "./beatdetektor";
+
 import Audio from "./audio";
 
 export default function main() {
   var scale = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"];
   const bufferSize = 1024;
+  // const bufferSize = 512;
   let a = new Audio(bufferSize);
 
   var aspectRatio = 16 / 10;
@@ -121,7 +124,12 @@ export default function main() {
   let chromaWrapper = document.querySelector("#chroma");
   let mfccWrapper = document.querySelector("#mfcc");
 
-  function render() {
+  let beatDetektor = new BeatDetektor(85, 169);
+  // let beatDetektor = new BeatDetektor(80, 120);
+  let beatDetektorKick = new BeatDetektor.modules.vis.BassKick();
+  let bpm = 0;
+
+  function render(ts: number) {
     features = a.get([
       "amplitudeSpectrum",
       "spectralCentroid",
@@ -130,8 +138,21 @@ export default function main() {
       "rms",
       "chroma",
       "mfcc",
+      "complexSpectrum", // beat detektor
     ]);
     if (features) {
+      {
+        beatDetektor.process(ts / 1000, features.complexSpectrum.real);
+        beatDetektorKick.process(beatDetektor);
+        bpm = beatDetektor.win_bpm_int_lo || bpm;
+        // console.log(
+        //   beatDetektor.win_bpm_int,
+        //   beatDetektor.winning_bpm,
+        //   beatDetektor.win_val
+        // );
+        console.log(bpm, beatDetektorKick.isKick());
+      }
+
       if (chromaWrapper && features.chroma) {
         chromaWrapper.innerHTML = features.chroma.reduce(
           (acc, v, i) =>
