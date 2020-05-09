@@ -11,9 +11,9 @@ export default function main() {
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(40, aspectRatio, 0.1, 1000);
 
-  var initializeFFTs = function (number, pointCount) {
+  var initializeFFTs = function (numFFTs: number, pointCount: number) {
     var ffts = [];
-    for (var i = 0; i < number; i++) {
+    for (var i = 0; i < numFFTs; i++) {
       ffts.push(
         Array.apply(null, Array(pointCount)).map(Number.prototype.valueOf, 0)
       );
