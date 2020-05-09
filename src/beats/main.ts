@@ -1,7 +1,10 @@
+import * as THREE from "three";
+
+import Audio from "./audio";
+
 export default function main() {
-  var scale = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'];
+  var scale = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"];
   const bufferSize = 1024;
-  let Audio = require('./audio');
   let a = new Audio(bufferSize);
 
   var aspectRatio = 16 / 10;
@@ -11,44 +14,48 @@ export default function main() {
   var initializeFFTs = function (number, pointCount) {
     var ffts = [];
     for (var i = 0; i < number; i++) {
-      ffts.push(Array.apply(null, Array(pointCount)).map(
-        Number.prototype.valueOf, 0
-      ));
+      ffts.push(
+        Array.apply(null, Array(pointCount)).map(Number.prototype.valueOf, 0)
+      );
     }
 
     return ffts;
   };
 
   var material = new THREE.LineBasicMaterial({
-    color: 0x00ff00
+    color: 0x00ff00,
   });
 
   var yellowMaterial = new THREE.LineBasicMaterial({
-    color: 0x00ffff
+    color: 0x00ffff,
   });
 
   var ffts = initializeFFTs(20, bufferSize);
   var buffer = null;
 
-  var renderer = new THREE.WebGLRenderer({ canvas: document.querySelector("canvas") });
+  var renderer = new THREE.WebGLRenderer({
+    canvas: document.querySelector("canvas"),
+  });
 
   function resize() {
-    renderer.domElement.style.width = '100%';
-    renderer.domElement.style.height = 'auto';
+    renderer.domElement.style.width = "100%";
+    renderer.domElement.style.height = "auto";
 
-    var resolution = renderer.domElement.clientWidth / 16 * 10;
-    renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
+    var resolution = (renderer.domElement.clientWidth / 16) * 10;
+    renderer.setPixelRatio(
+      window.devicePixelRatio ? window.devicePixelRatio : 1
+    );
 
     renderer.setSize(resolution * aspectRatio, resolution);
-    renderer.domElement.style.width = '100%';
-    renderer.domElement.style.height = 'auto';
+    renderer.domElement.style.width = "100%";
+    renderer.domElement.style.height = "auto";
 
     camera.aspect = (resolution * aspectRatio) / resolution;
     camera.updateProjectionMatrix();
   }
 
   resize();
-  window.addEventListener('resize', resize);
+  window.addEventListener("resize", resize);
 
   var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
   directionalLight.position.set(0, 1, 1);
@@ -80,7 +87,10 @@ export default function main() {
 
       let positions = new Float32Array(ffts[i].length * 3);
 
-      geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(positions, 3)
+      );
       geometry.setDrawRange(0, ffts[i].length);
 
       let line = new THREE.Line(geometry, material);
@@ -94,7 +104,10 @@ export default function main() {
   let bufferLine = new THREE.Line(bufferLineGeometry, material);
   {
     let positions = new Float32Array(bufferSize * 3);
-    bufferLineGeometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+    bufferLineGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(positions, 3)
+    );
     bufferLineGeometry.setDrawRange(0, bufferSize);
 
     positions = bufferLine.geometry.attributes.position.array;
@@ -105,32 +118,40 @@ export default function main() {
   // scene.add(loudnessLines);
 
   let features = null;
-  let chromaWrapper = document.querySelector('#chroma');
-  let mfccWrapper = document.querySelector('#mfcc');
+  let chromaWrapper = document.querySelector("#chroma");
+  let mfccWrapper = document.querySelector("#mfcc");
 
   function render() {
     features = a.get([
-      'amplitudeSpectrum',
-      'spectralCentroid',
-      'spectralRolloff',
-      'loudness',
-      'rms',
-      'chroma',
-      'mfcc'
+      "amplitudeSpectrum",
+      "spectralCentroid",
+      "spectralRolloff",
+      "loudness",
+      "rms",
+      "chroma",
+      "mfcc",
     ]);
     if (features) {
       if (chromaWrapper && features.chroma) {
-        chromaWrapper.innerHTML = features.chroma.reduce((acc, v, i) =>
-          `${acc}
-          <div class="chroma-band" style="background-color: rgba(0,${Math.round(255 * v)},0,1)">${scale[i]}</div>`, ''
+        chromaWrapper.innerHTML = features.chroma.reduce(
+          (acc, v, i) =>
+            `${acc}
+          <div class="chroma-band" style="background-color: rgba(0,${Math.round(
+            255 * v
+          )},0,1)">${scale[i]}</div>`,
+          ""
         );
       }
 
       if (mfccWrapper && features.mfcc) {
-        mfccWrapper.innerHTML = features.mfcc.reduce((acc, v, i) =>
-          `${acc}
-          <div class="mfcc-band" style="background-color: rgba(0,${Math.round(v + 25) * 5},0,1)">${i}</div>`, ''
-        )
+        mfccWrapper.innerHTML = features.mfcc.reduce(
+          (acc, v, i) =>
+            `${acc}
+          <div class="mfcc-band" style="background-color: rgba(0,${
+            Math.round(v + 25) * 5
+          },0,1)">${i}</div>`,
+          ""
+        );
       }
 
       ffts.pop();
@@ -141,8 +162,8 @@ export default function main() {
         var positions = lines.children[i].geometry.attributes.position.array;
         var index = 0;
 
-        for (var j = 0; j < ffts[i].length*3; j++) {
-          positions[index++] = 10.7 + (8 * Math.log10(j/ffts[i].length));
+        for (var j = 0; j < ffts[i].length * 3; j++) {
+          positions[index++] = 10.7 + 8 * Math.log10(j / ffts[i].length);
           positions[index++] = -5 + 0.1 * ffts[i][j];
           positions[index++] = -15 - i;
         }
@@ -154,28 +175,32 @@ export default function main() {
       if (features.spectralCentroid) {
         // SpectralCentroid is an awesome variable name
         // We're really just updating the x axis
-        centroidArrow.position.set(10.7 + (8 * Math.log10(features.spectralCentroid / (bufferSize / 2))), -6, -15);
+        centroidArrow.position.set(
+          10.7 + 8 * Math.log10(features.spectralCentroid / (bufferSize / 2)),
+          -6,
+          -15
+        );
       }
 
       // Render Spectral Rolloff Arrow
       if (features.spectralRolloff) {
         // We're really just updating the x axis
-        var rolloff = (features.spectralRolloff / 22050);
-        rolloffArrow.position.set(10.7 + (8 * Math.log10(rolloff)), -6, -15);
+        var rolloff = features.spectralRolloff / 22050;
+        rolloffArrow.position.set(10.7 + 8 * Math.log10(rolloff), -6, -15);
       }
       // Render RMS Arrow
       if (features.rms) {
         // We're really just updating the y axis
-        rmsArrow.position.set(-11, -5 + (10 * features.rms), -15);
+        rmsArrow.position.set(-11, -5 + 10 * features.rms, -15);
       }
 
       if (windowedSignalBuffer) {
         // Render Signal Buffer
         let positions = bufferLine.geometry.attributes.position.array;
         let index = 0;
-        for (var i = 0; i < bufferSize; i++){
-          positions[index++] = -11 + 22 * i / bufferSize;
-          positions[index++] = 4 + (windowedSignalBuffer[i] * 5);
+        for (var i = 0; i < bufferSize; i++) {
+          positions[index++] = -11 + (22 * i) / bufferSize;
+          positions[index++] = 4 + windowedSignalBuffer[i] * 5;
           positions[index++] = -25;
         }
         bufferLine.geometry.attributes.position.needsUpdate = true;
