@@ -5,8 +5,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "parcel src/index.html",
-    "deploy": "./build-and-deploy.sh"
+    "dev": "./bin/serve-dev.sh",
+    "deploy": "./bin/build-and-deploy.sh"
   },
   "dependencies": {
     "@types/p5": "^0.9.0",
