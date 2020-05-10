@@ -3,6 +3,7 @@ import * as THREE from "three";
 import BeatDetektor from "./beatdetektor";
 
 import Audio from "./audio";
+import { groupLogBands } from "./fftMagnitudeGrouper";
 
 export default function main() {
   var scale = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"];
@@ -17,9 +18,7 @@ export default function main() {
   var initializeFFTs = function (numFFTs: number, pointCount: number) {
     var ffts = [];
     for (var i = 0; i < numFFTs; i++) {
-      ffts.push(
-        Array.apply(null, Array(pointCount)).map(Number.prototype.valueOf, 0)
-      );
+      ffts.push(groupLogBands(new Float32Array(pointCount)));
     }
 
     return ffts;
@@ -176,7 +175,7 @@ export default function main() {
       }
 
       ffts.pop();
-      ffts.unshift(features.amplitudeSpectrum);
+      ffts.unshift(groupLogBands(features.amplitudeSpectrum));
       const windowedSignalBuffer = a.meyda._m.signal;
 
       for (let i = 0; i < ffts.length; i++) {
@@ -215,6 +214,7 @@ export default function main() {
         rmsArrow.position.set(-11, -5 + 10 * features.rms, -15);
       }
 
+      // ajaska - this is the thing at the top of the animation
       if (windowedSignalBuffer) {
         // Render Signal Buffer
         let positions = bufferLine.geometry.attributes.position.array;
