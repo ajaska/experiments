@@ -4,6 +4,7 @@ import BeatDetektor from "./beatdetektor";
 
 import Audio from "./audio";
 import { groupLogBands } from "./fftMagnitudeGrouper";
+import { calculateFlux } from "./calculateFlux";
 
 export default function main() {
   var scale = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "G#", "A", "Bb", "B"];
@@ -34,6 +35,9 @@ export default function main() {
 
   var ffts = initializeFFTs(20, bufferSize);
   var buffer = null;
+
+  var fluxes = new Float32Array(128);
+  var fluxIndex = 0;
 
   var renderer = new THREE.WebGLRenderer({
     canvas: document.querySelector("canvas"),
@@ -77,6 +81,7 @@ export default function main() {
   let rolloffArrow = new THREE.ArrowHelper(dir, origin, length, 0x0000ff);
   let rmsArrow = new THREE.ArrowHelper(rightDir, origin, length, 0xff00ff);
   let lines = new THREE.Group(); // Lets create a seperate group for our lines
+  let lines2 = new THREE.Group();
   // let loudnessLines = new THREE.Group();
   scene.add(centroidArrow);
   scene.add(rolloffArrow);
@@ -102,6 +107,16 @@ export default function main() {
     }
   }
 
+  // ajaska: Render ...Fluxogram
+  for (let i = 0; i < fluxes.length; i++) {
+    let geometry = new THREE.BoxGeometry(0.04, fluxes[i] || 0.1, 0.01);
+
+    const box = new THREE.Mesh(geometry, material);
+    box.position.set(-0.08 * (fluxes.length - i), -5, -20);
+
+    lines2.add(box);
+  }
+
   let bufferLineGeometry = new THREE.BufferGeometry();
   let bufferLine = new THREE.Line(bufferLineGeometry, material);
   {
@@ -116,6 +131,7 @@ export default function main() {
   }
   scene.add(bufferLine);
   scene.add(lines);
+  scene.add(lines2);
 
   // scene.add(loudnessLines);
 
@@ -149,7 +165,7 @@ export default function main() {
         //   beatDetektor.winning_bpm,
         //   beatDetektor.win_val
         // );
-        console.log(bpm, beatDetektorKick.isKick());
+        // console.log(bpm, beatDetektorKick.isKick());
       }
 
       if (chromaWrapper && features.chroma) {
@@ -177,6 +193,28 @@ export default function main() {
       ffts.pop();
       ffts.unshift(groupLogBands(features.amplitudeSpectrum));
       const windowedSignalBuffer = a.meyda._m.signal;
+
+      const fftDiff = calculateFlux(ffts[0], ffts[1]);
+      fftDiff.sort();
+      const mid = Math.ceil(fftDiff.length / 2);
+      const median =
+        fftDiff.length % 2 == 0
+          ? (fftDiff[mid] + fftDiff[mid - 1]) / 2
+          : fftDiff[mid - 1];
+
+      fluxes[fluxIndex] = median;
+
+      if (median > 1) console.log(median);
+      if (median > 1) {
+        lines2.children[fluxIndex].scale.set(1, median * 25, 1);
+      } else {
+        lines2.children[fluxIndex].scale.set(1, 0.1, 1);
+      }
+      //geometry.parameters.height = median || 0.1;
+      // lines2.children[fluxIndex].geometry.verticesNeedUpdate = true;
+      fluxIndex = (fluxIndex + 1) % fluxes.length;
+
+      // if (median > 1) console.log(median);
 
       for (let i = 0; i < ffts.length; i++) {
         var positions = lines.children[i].geometry.attributes.position.array;
