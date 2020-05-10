@@ -13,7 +13,7 @@ export function calculateFlux(
     nextMag = Math.log10(nextMag);
 
     // Multiply by 10 to make it easier to see :shrug:
-    const flux = 10 * Math.max(0, lastMag - nextMag);
+    const flux = 10 * Math.max(0, nextMag - lastMag);
     diffs[i] = flux;
   }
   return diffs;

@@ -205,7 +205,7 @@ export default function main() {
       fluxes[fluxIndex] = median;
 
       if (median > 1) console.log(median);
-      if (median > 1) {
+      if (median > 1.2) {
         lines2.children[fluxIndex].scale.set(1, median * 25, 1);
       } else {
         lines2.children[fluxIndex].scale.set(1, 0.1, 1);
