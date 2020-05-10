@@ -214,6 +214,11 @@ export default function main() {
       // lines2.children[fluxIndex].geometry.verticesNeedUpdate = true;
       fluxIndex = (fluxIndex + 1) % fluxes.length;
 
+      // console.log(Math.floor(fluxIndex + fluxes.length / 2) % fluxes.length);
+      lines2.children[
+        Math.floor(fluxIndex + fluxes.length / 16) % fluxes.length
+      ].scale.set(1, 1, 1);
+
       // if (median > 1) console.log(median);
 
       for (let i = 0; i < ffts.length; i++) {
