@@ -1,0 +1,2 @@
+!function(){if(!document.querySelectorAll(".rain"))return;let a=0,t="";for(;a<100;){const n=Math.floor(97*Math.random())+1,o=Math.floor(3*Math.random())+2;a+=o,t+='<div class="drop" style="left: '+a+"%; bottom: "+(o+o-1+100)+"%; animation-delay: 0."+n+"s; animation-duration: 0.5"+n+'s;"><div class="stem" style="animation-delay: 0.'+n+"s; animation-duration: 0.5"+n+'s;"></div><div class="splat" style="animation-delay: 0.'+n+"s; animation-duration: 0.5"+n+'s;"></div></div>'}document.querySelector(".rain.front-row").innerHTML+=t}();
+//# sourceMappingURL=neon.12dc1bcc.js.map
