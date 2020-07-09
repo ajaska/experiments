@@ -1,5 +1,8 @@
 import p5 from "p5";
 
+// @ts-ignore
+p5.disableFriendlyErrors = true;
+
 import { Vector, Point } from "./Vector";
 
 interface Boid {

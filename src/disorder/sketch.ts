@@ -25,6 +25,9 @@ function getLoading() {
   return element;
 }
 
+// @ts-ignore
+p5.disableFriendlyErrors = true;
+
 export function setup(sketch: p5): State {
   const loading = getLoading();
   loading.innerHTML = "Loading...";
