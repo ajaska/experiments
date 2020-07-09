@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Flashing</title>
+    <script src="./libgif.js"></script>
+    <style>
+    #app {
+      display: none;
+    }
+    .beat {
+      width: 100px;
+      height: 100px;
+      background-color: #EAEAEA;
+      display: inline-block;
+      /* transition: all 1s ease-out ; */
+    }
+    </style>
+  </head>
+
+  <body style="margin:0px;">
+    <div id="app"></div>
+    <span class="beat" id="beat1"></span>
+    <span class="beat" id="beat2"></span>
+    <span class="beat" id="beat3"></span>
+    <span class="beat" id="beat4"></span>
+    <div style="width: 400px;" id="app2"></div>
+    <div style="color: rgba(0,0,0,0.3)">
+      <div id="bpm" style="z-index: 1;"></div>
+    </div>
+    <img src="./badger.gif" width="400" rel:auto_play="0" id="gif" />
+    <script src="./index.ts"></script>
+  </body>
+</html>

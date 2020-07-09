@@ -19,7 +19,16 @@ function nByMArray<T>(n: number, m: number, fillWith: T) {
   return rows.map((_row) => Array<T>(m).fill(fillWith));
 }
 
+function getLoading() {
+  const element = document.getElementById("loading");
+  if (element == null) throw new Error("no element");
+  return element;
+}
+
 export function setup(sketch: p5): State {
+  const loading = getLoading();
+  loading.innerHTML = "Loading...";
+
   sketch.createCanvas(X_DIM, Y_DIM);
 
   const grid = nByMArray(
@@ -203,6 +212,8 @@ export function draw(sketch: p5, state: State) {
       sketch.endShape();
     }
   }
+
+  getLoading().innerHTML = "";
 
   return state;
 }
