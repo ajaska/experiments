@@ -155,7 +155,7 @@ export function updateState(state: State): void {
     state.mode = Mode.SELECT;
 
     const t = document.getElementById("text")!;
-    t.innerText = "Choose your rain drop";
+    t.innerText = "Choose your raindrop";
     t.className = "text fade-in";
 
     state.p5.mouseClicked = () => {
@@ -172,7 +172,7 @@ export function updateState(state: State): void {
         // Animations
         t.className = "text fade-out";
         setTimeout(() => {
-          t.innerText = "This is your rain drop.";
+          t.innerText = "This is your raindrop.";
           t.className = "text fade-in";
         }, 1000);
         setTimeout(() => {
