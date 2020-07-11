@@ -25,8 +25,18 @@ export interface State {
   mode: Mode;
 }
 
-const X_DIM = window.innerWidth;
-const Y_DIM = window.innerHeight - 4;
+let X_DIM = window.innerWidth;
+let Y_DIM = window.innerHeight - 4;
+
+if (X_DIM > 1024 || Y_DIM > 1024) {
+  if (X_DIM > Y_DIM) {
+    Y_DIM = (1024 / X_DIM) * Y_DIM;
+    X_DIM = 1024;
+  } else {
+    X_DIM = (1024 / Y_DIM) * X_DIM;
+    Y_DIM = 1024;
+  }
+}
 
 const NOT_SPLATTERING = 999;
 const MAX_SPLATTER = 10;
@@ -39,7 +49,9 @@ const i_said_goodbye = () => {
 };
 
 export function setup(sketch: p5): State {
-  sketch.createCanvas(X_DIM, Y_DIM);
+  const canvas = sketch.createCanvas(X_DIM, Y_DIM).elt;
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
 
   let raindrops = 20;
   let mode = Mode.INTRO;
@@ -137,6 +149,7 @@ export function updateState(state: State): void {
       });
     }
   }
+
   if (state.p5.frameCount === 60 * 3) {
     const t = document.getElementById("text")!;
     t.className = "text fade-out";
@@ -233,10 +246,13 @@ export function draw(sketch: p5, state: State) {
       // Splatters
       sketch.strokeWeight(1);
       sketch.stroke(180, 180, 230);
-      const angles = [-Math.PI / 4, 0, Math.PI / 4];
+      const angles = [
+        { dx: -0.7, dy: 0.7 },
+        { dx: 0, dy: 1 },
+        { dx: 0.7, dy: 0.7 },
+      ];
       for (const angle of angles) {
-        const dx = Math.sin(angle);
-        const dy = Math.cos(angle);
+        const { dx, dy } = angle;
         sketch.point(
           drop.x + dx * (MAX_SPLATTER - drop.splattering),
           drop.y - dy * (MAX_SPLATTER - drop.splattering)
