@@ -167,6 +167,7 @@ export function updateState(state: State): void {
       if (maybeDrop) {
         maybeDrop.selected = true;
         state.mode = Mode.STORY;
+        state.p5.mouseClicked = () => {}
 
         // Animations
         t.className = "text fade-out";
