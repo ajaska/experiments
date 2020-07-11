@@ -28,14 +28,10 @@ export interface State {
 let X_DIM = window.innerWidth;
 let Y_DIM = window.innerHeight - 4;
 
-if (X_DIM > 1024 || Y_DIM > 1024) {
-  if (X_DIM > Y_DIM) {
-    Y_DIM = (1024 / X_DIM) * Y_DIM;
-    X_DIM = 1024;
-  } else {
-    X_DIM = (1024 / Y_DIM) * X_DIM;
-    Y_DIM = 1024;
-  }
+// Mobile perf hacks
+if (Y_DIM > 1024 && Y_DIM > X_DIM) {
+  X_DIM = (1024 / Y_DIM) * X_DIM;
+  Y_DIM = 1024;
 }
 
 const NOT_SPLATTERING = 999;
