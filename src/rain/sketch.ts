@@ -27,11 +27,13 @@ export interface State {
 
 let X_DIM = window.innerWidth;
 let Y_DIM = window.innerHeight - 4;
+let MOBILE_HACKS = false;
 
 // Mobile perf hacks
 if (Y_DIM > 1024 && Y_DIM > X_DIM) {
   X_DIM = (1024 / Y_DIM) * X_DIM;
   Y_DIM = 1024;
+  MOBILE_HACKS = true;
 }
 
 const NOT_SPLATTERING = 999;
@@ -161,13 +163,17 @@ export function updateState(state: State): void {
     state.p5.mouseClicked = () => {
       const x = state.p5.mouseX;
       const y = state.p5.mouseY;
+      let range = MOBILE_HACKS ? 32 : 8;
       const maybeDrop = state.rain.find(
-        (drop) => Math.abs(x - drop.x) < 8 && Math.abs(y - drop.y) < 8
+        (drop) => Math.abs(x - drop.x) < range && Math.abs(y - drop.y) < range
       );
       if (maybeDrop) {
         maybeDrop.selected = true;
         state.mode = Mode.STORY;
-        state.p5.mouseClicked = () => {}
+
+        if (!MOBILE_HACKS) {
+          state.p5.mouseClicked = () => {};
+        }
 
         // Animations
         t.className = "text fade-out";
