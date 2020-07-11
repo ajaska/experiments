@@ -160,7 +160,7 @@ export function updateState(state: State): void {
     t.innerText = "Choose your raindrop";
     t.className = "text fade-in";
 
-    state.p5.mouseClicked = () => {
+    const mouseClick = () => {
       const x = state.p5.mouseX;
       const y = state.p5.mouseY;
       let range = MOBILE_HACKS ? 32 : 8;
@@ -171,8 +171,9 @@ export function updateState(state: State): void {
         maybeDrop.selected = true;
         state.mode = Mode.STORY;
 
-        if (!MOBILE_HACKS) {
-          state.p5.mouseClicked = () => {};
+        state.p5.mouseClicked = () => {};
+        if (MOBILE_HACKS) {
+          state.p5.touchStarted = () => {};
         }
 
         // Animations
@@ -205,6 +206,11 @@ export function updateState(state: State): void {
       }
       return false;
     };
+    state.p5.mouseClicked = mouseClick;
+
+    if (MOBILE_HACKS) {
+      state.p5.touchStarted = mouseClick;
+    }
   }
 }
 
