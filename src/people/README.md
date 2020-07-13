@@ -1,6 +1,6 @@
 How to use generate your own data (since you asked).
 
-1. Queue up a data dump from Facebook -> [https://www.facebook.com/dyi/](https://www.facebook.com/dyi/)
+1. Queue up a data dump from Facebook -> [https://www.facebook.com/dyi/](https://www.facebook.com/dyi/). Select json format
 2. Extract the zip files into this or some other folder. They should be named `facebook-yourname-1,2,3/` etc.
 3. Set your name at the top of process\_dump.py.
 4. Run process\_dump.py from the directory that has all of your zip files as subfolders, it should pick up messages from them.
