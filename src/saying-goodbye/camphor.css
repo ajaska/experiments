@@ -1,0 +1,44 @@
+@font-face {
+    font-family:Camphor;
+    font-weight:300;
+    src:url("./fonts/camphor/300-light.woff2") format("woff2"),url("./fonts/camphor/300-light.woff") format("woff")
+}
+@font-face {
+    font-family:Camphor;
+    font-weight:300;
+    font-style:italic;
+    src:url("./fonts/camphor/300-light-italic.woff2") format("woff2"),url("./fonts/camphor/300-light-italic.woff") format("woff")
+}
+@font-face {
+    font-family:Camphor;
+    font-weight:400;
+    src:url("./fonts/camphor/400-regular.woff2") format("woff2"),url("./fonts/camphor/400-regular.woff") format("woff")
+}
+@font-face {
+    font-family:Camphor;
+    font-weight:400;
+    font-style:italic;
+    src:url("./fonts/camphor/400-regular-italic.woff2") format("woff2"),url("./fonts/camphor/400-regular-italic.woff") format("woff")
+}
+@font-face {
+    font-family:Camphor;
+    font-weight:500;
+    src:url("./fonts/camphor/500-medium.woff2") format("woff2"),url("./fonts/camphor/500-medium.woff") format("woff")
+}
+@font-face {
+    font-family:Camphor;
+    font-weight:500;
+    font-style:italic;
+    src:url("./fonts/camphor/500-medium-italic.woff2") format("woff2"),url("./fonts/camphor/500-medium-italic.woff") format("woff")
+}
+@font-face {
+    font-family:Camphor;
+    font-weight:600;
+    src:url("./fonts/camphor/600-bold.woff2") format("woff2"),url("./fonts/camphor/600-bold.woff") format("woff")
+}
+@font-face {
+    font-family:Camphor;
+    font-weight:600;
+    font-style:italic;
+    src:url("./fonts/camphor/600-bold-italic.woff2") format("woff2"),url("./fonts/camphor/600-bold-italic.woff") format("woff")
+}
