@@ -24,7 +24,7 @@ const App = () => {
   const goodbyeNodes = goodbyes
     .filter((goodbye) => goodbye.when + TIMING > now)
     .map((goodbye) => {
-      const delaySeconds = Math.round(goodbye.when - now / 1000); // negative number
+      const delaySeconds = Math.round((goodbye.when - now) / 1000); // negative number
       // Only bother with this if we know we're reloaded
       const animationDelay =
         delaySeconds < -10 ? `${delaySeconds}s` : undefined;
