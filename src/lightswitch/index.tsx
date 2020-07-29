@@ -20,8 +20,16 @@ interface Data {
 declare var process: any;
 const ws_url =
   process.env.NODE_ENV === "development"
-    ? "ws://localhost:1234"
+    ? "ws://localhost:1235"
     : "wss://experiments-do.ajaska.com:443/lightswitch/";
+
+const playAudio = () => {
+  if (!isIOS) {
+    const audio = new Audio(audioFile);
+    audio.volume = 0.2;
+    audio.play();
+  }
+};
 
 const App = () => {
   const [lights, _setLights] = React.useState(false);
@@ -32,7 +40,8 @@ const App = () => {
     const websocket = new WebSocket(ws_url);
     websocket.onmessage = (e) => {
       const data: Data = JSON.parse(e.data);
-      setLights(data.on);
+      _setLights(data.on);
+      playAudio();
     };
 
     websocket.onerror = () => {
@@ -50,10 +59,7 @@ const App = () => {
 
   const setLights = React.useCallback(
     (lights: boolean) => {
-      if (!isIOS) {
-        const audio = new Audio(audioFile);
-        audio.play();
-      }
+      playAudio();
       _setLights(lights);
       if (websocket != null) {
         websocket.send(JSON.stringify({ on: lights }));
