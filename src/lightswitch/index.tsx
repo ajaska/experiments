@@ -41,7 +41,6 @@ const App = () => {
     websocket.onmessage = (e) => {
       const data: Data = JSON.parse(e.data);
       _setLights(data.on);
-      playAudio();
     };
 
     websocket.onerror = () => {
@@ -57,9 +56,12 @@ const App = () => {
     };
   }, []);
 
+  React.useEffect(() => {
+    playAudio();
+  }, [lights]);
+
   const setLights = React.useCallback(
     (lights: boolean) => {
-      playAudio();
       _setLights(lights);
       if (websocket != null) {
         websocket.send(JSON.stringify({ on: lights }));
