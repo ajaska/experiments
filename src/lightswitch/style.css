@@ -1,3 +1,7 @@
+html, body, #react {
+  height: 100%
+}
+
 body {
   font-family: Camphor, sans-serif;
 }
@@ -8,7 +12,7 @@ body {
   align-items: center;
   text-align: center;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
 }
 
 .container:after {
