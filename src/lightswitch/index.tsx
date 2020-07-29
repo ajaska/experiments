@@ -3,6 +3,16 @@ import * as ReactDOM from "react-dom";
 
 import classNames from "classnames";
 
+const isIOS =
+  /iPad|iPhone|iPod/.test(navigator.platform) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+declare var require: any;
+const audioFile: string = require("url:./switch.mp3");
+if (!isIOS) {
+  new Audio(audioFile); // Preload
+}
+
 interface Data {
   on: boolean;
 }
@@ -40,6 +50,10 @@ const App = () => {
 
   const setLights = React.useCallback(
     (lights: boolean) => {
+      if (!isIOS) {
+        const audio = new Audio(audioFile);
+        audio.play();
+      }
       _setLights(lights);
       if (websocket != null) {
         websocket.send(JSON.stringify({ on: lights }));
