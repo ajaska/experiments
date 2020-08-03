@@ -1,0 +1,5 @@
+@font-face {
+    font-family:Camphor;
+    font-weight:400;
+    src:url("./fonts/camphor/400-regular.woff2") format("woff2"),url("./fonts/camphor/400-regular.woff") format("woff")
+}

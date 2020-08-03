@@ -1,0 +1,4 @@
+"Wind Chime, Gamelan Gong, A.wav" by InspectorJ (www.jshaw.co.uk) of Freesound.org
+
+Converted (who asked) with:
+fmpeg -i ./411090__inspectorj__wind-chime-gamelan-gong-a.wav -codec:a libmp3lame -qscale:a 0 -to 00:00:06 chime.mp3
