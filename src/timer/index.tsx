@@ -1,6 +1,10 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
+import NoSleep from "nosleep.js";
+
+const noSleep = new NoSleep();
+
 declare var require: any;
 const audioFile: string = require("url:./chime.mp3");
 new Audio(audioFile); // Preload
@@ -85,6 +89,7 @@ const App = () => {
           const newRemainingTime = remainingTime - deltaTime / 1000.0;
           if (newRemainingTime <= 0) {
             setTimerState(TimerState.Stopped);
+            noSleep.disable();
             playAudio();
             return timerDuration;
           }
@@ -109,7 +114,12 @@ const App = () => {
           return (
             <>
               <button disabled={true}>Cancel</button>
-              <button onClick={() => setTimerState(TimerState.Running)}>
+              <button
+                onClick={() => {
+                  setTimerState(TimerState.Running);
+                  noSleep.enable();
+                }}
+              >
                 Start
               </button>
             </>
@@ -122,11 +132,17 @@ const App = () => {
                 onClick={() => {
                   setTimerState(TimerState.Stopped);
                   setRemainingTime(timerDuration);
+                  noSleep.disable();
                 }}
               >
                 Cancel
               </button>
-              <button onClick={() => setTimerState(TimerState.Running)}>
+              <button
+                onClick={() => {
+                  setTimerState(TimerState.Running);
+                  noSleep.enable();
+                }}
+              >
                 Start
               </button>
             </>
@@ -139,11 +155,17 @@ const App = () => {
                 onClick={() => {
                   setTimerState(TimerState.Stopped);
                   setRemainingTime(timerDuration);
+                  noSleep.disable();
                 }}
               >
                 Cancel
               </button>
-              <button onClick={() => setTimerState(TimerState.Paused)}>
+              <button
+                onClick={() => {
+                  setTimerState(TimerState.Paused);
+                  noSleep.disable();
+                }}
+              >
                 Pause
               </button>
             </>
