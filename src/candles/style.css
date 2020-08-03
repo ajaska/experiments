@@ -1,0 +1,171 @@
+html, body, #react {
+  height: 100%
+}
+
+body {
+  font-family: Camphor, sans-serif;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+
+  background: black;
+}
+
+.candle {
+  width: 34px;
+  height: 200px;
+  margin: 30px;
+  position: relative;
+
+  transform: scale(0.6);
+  cursor: pointer;
+  opacity: 1;
+  animation: blink 0.1s infinite;
+}
+
+.candle.unlit {
+  animation: none
+}
+
+.flame {
+  width: 34px;
+  height: 60px;
+  animation: move 3s infinite, move-left 3s infinite;
+  margin: 0 auto;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.unlit > .flame {
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.orange {
+  margin: 0 auto;
+  width: 20px;
+  height: 60px;
+  position: absolute;
+  top: 0;
+  left: 5px;
+  background: white;
+  box-shadow:
+      0 0px 0px 3px white,
+      0 -10px 1px 4px white,
+      0 -15px 2px 3px gold,
+      0 -20px 5px 4px #ff6a00,
+      0 0px 100px 10px #ff6a00,
+      0 -10px 2px 4px white,
+      0 -5px 3px 3px white;
+  border-top-left-radius: 100px 750px;
+  border-top-right-radius: 100px 750px;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+  transform: skewY(-10deg);
+  animation: flame-up 4s infinite;
+}
+
+@keyframes move{
+  0%{ transform: skewX(2deg) skewY(5deg)}
+  50%{ transform: skewX(-2deg) skewY(-0deg)}
+  100%{ transform: skewX(2deg) skewY(5deg)}
+}
+
+@keyframes move-left{
+  50%{transform: skewX(3deg);}
+}
+
+@keyframes flame-up{
+  50% { box-shadow:
+      0 0px 0px 3px white,
+      0 -38px 1px 4px white,
+      0 -41px 2px 3px gold,
+      0 -50px 5px 4px #ff6a00,
+      0 0px 100px 10px #ff6a00,
+      0 -10px 2px 4px white,
+      0 -5px 3px 3px white;
+  }
+}
+
+.blue{
+    transform: scale(0.9);
+    position: absolute;
+    bottom: 6px;
+    left: 14px;
+    width: 1px;
+    height: 8px;
+    border-radius: 1%;
+    background: #2c2b39;
+    box-shadow:
+      0 6px 10px 12px rgba(60, 76, 125, 0.3),
+      0 0px 4px 8px #2c2b39,
+      0 -12px 10px 8px rgba(255,106,0, 0.5),
+      0 5px 7px 12px #2c2b39,
+      0 -3px 10px 12px #2c2b39,
+      5px -10px 10px 5px red,
+      0 -15px 10px 10px gold,
+      5px -25px 10px 5px gold,
+      0 2px 5px 10px #30537d,
+      0 -2px 2px 14px #76daff,
+      0 2px 10px 12px #76daff;
+  }
+
+.shadows{
+  position: absolute;
+  left: 40%;
+  top: 0;
+  width: 1px;
+  height: 20px;
+  border-radius: 0.1px / 10px;
+  box-shadow:
+    0 5px 10px 15px gold,
+    0 0px 50px 25px #ff6a00,
+    0 15px 25px 15px #ff6a00,
+    5px 15px 5px 13px #ff6a00,
+    5px 15px 5px 13px #ff6a00,
+    0 35px 25px 15px black;
+}
+
+.wick{
+  position: absolute;
+  width: 6px;
+  height: 40px;
+  background: #23161a;
+  top: 40px;
+  left: 13px;
+  transform: skewX(2deg);
+  border-radius: 10%;
+  box-shadow: 0 0 2px 0px black;
+}
+
+.wax {
+  position: relative;
+  top: 15px;
+  left: -22px;
+  width: 80px;
+  height: 50px;
+  background: linear-gradient(to bottom, #ff9224 0px, #ff9224 10px, #58523a 30px);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  box-shadow:
+    inset 0 7px 12px -2px #fbf348,
+    inset 0 9px 57px -3px rgba(255,0,0,0.4),
+    0 0 3px 0px #ff6a00;
+
+  transition: all 0.3s ease-in-out;
+}
+
+.unlit > .wax {
+  box-shadow:
+    inset 0 7px 12px -2px #2A2A2A,
+    inset 0 9px 57px -3px rgba(255,0,0,0.4),
+    0 0 3px 0px #2A2A2A;
+  background: linear-gradient(to bottom, #292617 0px, #58523a 10px, #58523a 30px);
+  transition: all 0.2s ease-in-out;
+}
+
+@keyframes blink{
+  50% {opacity: 0.9;}
+}
