@@ -13,19 +13,31 @@ const Candle = () => {
     (Math.random() + 3.5).toFixed(1) + "s"
   );
 
+  const message1 = "hello world";
+  const message2 =
+    "jsadsad jd lksad jlkds dsalkj lad oi ein d asnd sad adn sadjsad n21je asd sada.";
+
   return (
     <div
-      className={classNames("candle", { unlit: !lit })}
-      style={{ animationDelay, animationDuration }}
+      className={classNames("candle-frame", { lit })}
       onClick={() => setLit(!lit)}
     >
-      <div className="flame">
-        <div className="shadows" />
-        <div className="orange" style={{ animationDelay, animationDuration }} />
-        <div className="blue" />
+      <div
+        className={classNames("candle", { unlit: !lit })}
+        style={{ animationDelay, animationDuration }}
+      >
+        <div className="flame">
+          <div className="shadows" />
+          <div
+            className="orange"
+            style={{ animationDelay, animationDuration }}
+          />
+          <div className="blue" />
+        </div>
+        <div className="wick" />
+        <div className="wax" />
       </div>
-      <div className="wick" />
-      <div className="wax" />
+      <div className="message">{lit && message1}</div>
     </div>
   );
 };
