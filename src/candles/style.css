@@ -210,3 +210,24 @@ body {
 .lit.candle-frame:hover > .message {
   opacity: 1;
 }
+
+.message.composing {
+  opacity: 1;
+}
+
+.composer-holder {
+  opacity: 0;
+  position: absolute;
+}
+
+.composing > .composer-holder {
+  opacity: 1;
+  position: unset;
+}
+
+.composer {
+  border: none;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+}

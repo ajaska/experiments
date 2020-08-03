@@ -3,8 +3,40 @@ import * as ReactDOM from "react-dom";
 
 import classNames from "classnames";
 
-const Candle = () => {
-  const [lit, setLit] = React.useState(true);
+declare var process: any;
+const ws_url =
+  process.env.NODE_ENV === "development"
+    ? "ws://localhost:1236"
+    : "wss://experiments-do.ajaska.com:443/candles/";
+
+interface CandleProps {
+  message: string | null;
+  setMessage: (message: string | null) => void;
+}
+
+const Candle = (props: CandleProps) => {
+  const [mine, setMine] = React.useState(false);
+  const [composing, setComposing] = React.useState(false);
+  const [composedMessage, setComposedMessage] = React.useState("");
+
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const { message, setMessage } = props;
+  const lit = message != null;
+  const setLit = (x: boolean) => {
+    if (!mine && message == null) setMine(true);
+    if (mine || message == null) setComposing(true);
+
+    // This input hack (instead of just using autoFocus) is to work around
+    // a limitation of iOS.
+    // https://github.com/JedWatson/react-select/issues/3501
+    const input = inputRef.current;
+    if (input != null) {
+      input.focus();
+    }
+
+    setMessage(x ? "" : null);
+  };
 
   const [animationDelay] = React.useState(
     (Math.random() * -4).toFixed(1) + "s"
@@ -13,9 +45,30 @@ const Candle = () => {
     (Math.random() + 3.5).toFixed(1) + "s"
   );
 
-  const message1 = "hello world";
-  const message2 =
-    "jsadsad jd lksad jlkds dsalkj lad oi ein d asnd sad adn sadjsad n21je asd sada.";
+  const composer = (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        setComposing(false);
+        setComposedMessage("");
+        setMessage(composedMessage);
+      }}
+    >
+      <input
+        type="text"
+        value={composedMessage}
+        onChange={(e) => setComposedMessage(e.currentTarget.value)}
+        onBlur={() => {
+          setComposing(false);
+          setComposedMessage("");
+          setMessage(composedMessage);
+        }}
+        placeholder="Leave a message..."
+        className="composer"
+        ref={inputRef}
+      />
+    </form>
+  );
 
   return (
     <div
@@ -37,15 +90,56 @@ const Candle = () => {
         <div className="wick" />
         <div className="wax" />
       </div>
-      <div className="message">{lit && message1}</div>
+      <div className={classNames("message", { composing })}>
+        {lit && message}
+        <div className="composer-holder">{composer}</div>
+      </div>
     </div>
   );
 };
 
 const App = () => {
-  const candles = [...Array(20).keys()].map((i: number) => <Candle key={i} />);
+  const [websocket, setWebsocket] = React.useState<WebSocket | null>(null);
+  const [websocketError, setWebsocketError] = React.useState(false);
+  const [messages, setMessages] = React.useState<(string | null)[]>([]);
 
-  return <div className="container">{candles}</div>;
+  React.useEffect(() => {
+    const websocket = new WebSocket(ws_url);
+    websocket.onmessage = (e) => {
+      const data: (string | null)[] = JSON.parse(e.data);
+      setMessages(data);
+    };
+
+    websocket.onerror = (e) => {
+      console.log("websocket error", e);
+      setWebsocket(null);
+      setWebsocketError(true);
+    };
+
+    setWebsocket(websocket);
+
+    return () => {
+      websocket.close();
+    };
+  }, []);
+
+  if (websocket == null && !websocketError) {
+    return <div>Loading...</div>;
+  } else if (websocket == null) {
+    return <div>Error connecting to server</div>;
+  }
+
+  const candleNodes = [...Array(20).keys()].map((i: number) => (
+    <Candle
+      key={i}
+      message={messages[i]}
+      setMessage={(message: null | string) =>
+        websocket.send(JSON.stringify({ message, i }))
+      }
+    />
+  ));
+
+  return <div className="container">{candleNodes}</div>;
 };
 
 ReactDOM.render(<App />, document.getElementById("react"!));
