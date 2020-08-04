@@ -1,0 +1,1 @@
+{"mappings":"AAAA,WACI,mBAAmB,CACnB,eAAe,CACf,yKACJ","sources":["./src/please-dont-go/camphor.css"],"sourcesContent":["@font-face {\n    font-family:Camphor;\n    font-weight:400;\n    src:url(\"./fonts/camphor/400-regular.woff2\") format(\"woff2\"),url(\"./fonts/camphor/400-regular.woff\") format(\"woff\")\n}\n"],"names":[],"version":3,"file":"index.9dbd7db4.css.map"}

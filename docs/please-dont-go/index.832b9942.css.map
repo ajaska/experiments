@@ -1,0 +1,1 @@
+{"mappings":"AAAA,iBACA,WACA,CAEA,KACA,8BACA,CAEA,WACA,eAAA,CAEA,YAAA,CACA,kBACA","sources":["./src/please-dont-go/style.css"],"sourcesContent":["html, body, #react {\n  height: 100%\n}\n\nbody {\n  font-family: Camphor, sans-serif;\n}\n\n.container {\n  min-height: 100%;\n\n  display: grid;\n  place-items: center;\n}\n"],"names":[],"version":3,"file":"index.832b9942.css.map"}
