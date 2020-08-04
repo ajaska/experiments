@@ -1,0 +1,14 @@
+html, body, #react {
+  height: 100%
+}
+
+body {
+  font-family: Camphor, sans-serif;
+}
+
+.container {
+  min-height: 100%;
+
+  display: grid;
+  place-items: center;
+}
