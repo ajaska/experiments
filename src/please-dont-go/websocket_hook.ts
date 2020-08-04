@@ -56,30 +56,6 @@ export const useWebsocket = (
     websocket.current = ws;
   }, [websocketState]);
 
-  // Cleanup websocket on page/component unload
-  React.useEffect(() => {
-    const closeWebsocket = () => {
-      if (
-        websocket.current != null &&
-        websocket.current.readyState === WebSocket.OPEN
-      ) {
-        websocket.current.close();
-        console.log("did close");
-      }
-    };
-
-    const beforeUnload = (e: BeforeUnloadEvent) => {
-      if (e.returnValue) return;
-      closeWebsocket();
-    };
-
-    window.addEventListener("beforeunload", beforeUnload);
-    return () => {
-      closeWebsocket();
-      window.removeEventListener("beforeunload", beforeUnload);
-    };
-  }, []);
-
   React.useEffect(() => {
     if (websocket.current != null) {
       websocket.current.onmessage = (e) => {

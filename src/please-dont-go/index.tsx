@@ -63,7 +63,12 @@ const App = () => {
 
   if (lsBan || banned) {
     return (
-      <div className="container">There doesn't seem to be anything here...</div>
+      <div className="container">
+        <p style={{ maxWidth: 400, textAlign: "center" }}>
+          Why did you leave? Horrible things happened here. There's nothing left
+          to see now.
+        </p>
+      </div>
     );
   }
 
@@ -71,20 +76,19 @@ const App = () => {
     return <div className="container" />;
   }
 
-  if (
-    fingerprint == null ||
-    websocketState === ReadyState.CONNECTING ||
-    websocketState === ReadyState.RECONNECTING ||
-    !calledBack
-  ) {
+  if (!phonedHome || !calledBack) {
     return <div className="container">Loading...</div>;
   }
 
   const rabbit = `
-　　　　∩∩
-　　　（´･ω･）        I just had the most terrible dream.
-　　 ＿|　⊃／(＿＿_  It feels like something awful is about to happen.
-　／　└-(＿＿＿_／    Please don't go.
+　　　　　　　　　∩∩
+　　　　　　　　（´･ω･）
+　　　　　　　 ＿|　⊃／(＿＿_  
+　　　　　　／　└-(＿＿＿_／ 
+
+I just had the most terrible dream.
+It feels like something awful is about to happen.
+Please don't go.
 `;
 
   return (
