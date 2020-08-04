@@ -118,6 +118,12 @@ const App = () => {
       setWebsocketError(true);
     };
 
+    websocket.onclose = (e) => {
+      console.log("websocket closed", e);
+      setWebsocket(null);
+      setWebsocketError(true);
+    };
+
     setWebsocket(websocket);
 
     return () => {
