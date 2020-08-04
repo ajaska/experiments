@@ -59,9 +59,11 @@ const Candle = (props: CandleProps) => {
         value={composedMessage}
         onChange={(e) => setComposedMessage(e.currentTarget.value)}
         onBlur={() => {
-          setComposing(false);
-          setComposedMessage("");
-          setMessage(composedMessage);
+          if (composing) {
+            setComposing(false);
+            setComposedMessage("");
+            setMessage(composedMessage);
+          }
         }}
         placeholder="Leave a message..."
         className="composer"
