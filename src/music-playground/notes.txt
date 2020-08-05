@@ -1,0 +1,4 @@
+Grab paths:
+
+cat index.html | ag -o '"path":"\K[^"]*' | sort | uniq
+
