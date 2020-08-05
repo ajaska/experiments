@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explore the fundamentals of music via Ableton's interactive website. Experiment with beats, melody, harmony, basslines, and song structure in your web browser.">
+  
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://learningmusic.ableton.com/images/og-image.jpg">
+  
+    <meta property="ix:host" content="ableton-learningmusic.imgix.net">
+    <meta property="ix:useHttps" content="true">
+  
+    <title> The playground | Learning Music (Beta)</title>
+  
+    <link rel="stylesheet" href="https://learningmusic.ableton.com/css/main.css">
+  
+    <script type="text/javascript" src="https://learningmusic.ableton.com/third-party/polyfills/polyfills.js"></script>
+    <script type="text/javascript" src="https://learningmusic.ableton.com/third-party/Tone.js-master/build/Tone.min.js"></script>
+    <script type="text/javascript" src="https://learningmusic.ableton.com/third-party/d3/d3.min.js"></script>
+    <script type="text/javascript" src="https://learningmusic.ableton.com/third-party/lodash/lodash.js"></script>
+    <script type="text/javascript" src="https://learningmusic.ableton.com/third-party/microevent/microevent.js"></script>
+    <script type="text/javascript" src="https://learningmusic.ableton.com/third-party/imgix/imgix.min.js"></script>
+    <script type="text/javascript" src="https://learningmusic.ableton.com/widgets/build/widgets.min.js"></script>
+  
+    </head>
+  <body class="lang-- bg--base color--inverted has-nav"
+        onload="">
+    <noscript>
+      <div class="pt2 pb2 bg--salmon text--white">
+        <center><strong>Please enable JavaScript in order to use this site.</strong></center>
+      </div>
+    </noscript>
+
+    <script type="text/javascript">
+      function onLoad() {
+        SUPERVISOR = new AudioSupervisor();
+        SUPERVISOR.init();
+    
+        EXPORTER = new LiveSetExporter();
+        EXPORTER.init();
+    
+        KEY_SUPERVISOR = new KeySupervisor();
+        KEY_SUPERVISOR.init();
+    
+        METRONOME = new Metronome();
+        METRONOME.init();
+    
+        SAMPLE_CACHE = new SampleCache();
+        SAMPLE_CACHE.init();
+    
+        LOCALE = '';
+        LOCALE_PATH = '';
+      }
+      onLoad();
+    
+      document.addEventListener("DOMContentLoaded", function(event) {
+        var widgets = document.getElementsByClassName("widget");
+        var widgetIds = {};
+        for (var i = 0; i < widgets.length; i++) {
+          var id = widgets[i].id;
+          if (widgetIds[id]) {
+            throw "Duplicate widget id: " + id;
+          }
+          widgetIds[id] = true;
+        }
+      });
+    </script>
+    <div class="container mx-auto">
+      <header class="main-header">
+        <div class="ribbon ribbon--rigid medium">
+          <div class="ribbon__element main-header__title">
+            The playground
+          </div>
+          <div class="ribbon__element main-header__logo">
+            <a href="https://www.ableton.com/">
+              <svg class="main-header__logo__icon" width="60px" height="28px" viewBox="0 0 60 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g fill-rule="nonzero" fill="#FFFFFF">
+                  <rect id="Rectangle-path" x="0" y="0" width="4" height="28"></rect>
+                  <rect id="Rectangle-path" x="8" y="0" width="4" height="28"></rect>
+                  <rect id="Rectangle-path" x="16" y="0" width="4" height="28"></rect>
+                  <rect id="Rectangle-path" x="24" y="0" width="4" height="28"></rect>
+                  <rect id="Rectangle-path" x="32" y="24" width="28" height="4"></rect>
+                  <rect id="Rectangle-path" x="32" y="16" width="28" height="4"></rect>
+                  <rect id="Rectangle-path" x="32" y="8" width="28" height="4"></rect>
+                  <rect id="Rectangle-path" x="32" y="0" width="28" height="4"></rect>
+                </g>
+              </svg>
+            </a>
+          </div>
+        </div>
+      
+        <div class="nav-title">
+        <button aria-label="Toggle navigation" tabindex="0" class="btn nav-title__button js-toggle-nav">
+          <span class="nav-title__content">
+            <span class="nav-title__icon-wrapper">
+              <img width="26" alt="" src="https://learningmusic.ableton.com/images/icons/chapters.svg" class="nav-title__icon nav-title__icon--open">
+              <img width="26" alt="" src="https://learningmusic.ableton.com/images/icons/close.svg" class="nav-title__icon nav-title__icon--close">
+            </span>
+            <span class="nav-title__label ">Chapters</span>
+          </span>
+        </button>
+      </div>
+      
+      </header>
+    </div>
+
+    <div class="container container--max-width mx-auto">
+      <div class="body-text text-container limit-line-length-inside">
+        <h1 id="the-playground">The playground</h1>
+<p>On this page, you can experiment with the different music making tools you&#39;ve used so far. They&#39;ll all play together in sync.</p>
+<h2 id="beats">Beats</h2>
+<p><script> _theplaygroundplaygrounddrumsrecorder = new Recorder(); </script>
+          <div class="widget theme-a" id="_theplaygroundplaygrounddrums">
+            <div class="widget-pianoroll drumsequencer"
+              id='_theplaygroundplaygrounddrumssequencer'
+              data-material='drums'
+              data-tempo='85'
+              data-onPlay='join'
+              data-targetState=''
+              data-defaultState=''
+              data-lanes='[{"name":"Kick","midi":36,"path":"simplesequencer/909/Kick"},{"name":"Rim","midi":37,"path":"simplesequencer/909/Rim"},{"name":"Snare","midi":38,"path":"simplesequencer/909/Snare"},{"name":"Clap","midi":39,"path":"simplesequencer/909/Clap"},{"name":"Closed Hat","midi":42,"choke":46,"path":"simplesequencer/909/ClosedHat"},{"name":"Open Hat","midi":46,"path":"simplesequencer/909/OpenHat"},{"name":"Tom","midi":48,"path":"simplesequencer/909/TomHi"},{"name":"Ride","midi":51,"path":"simplesequencer/909/Ride"}]'
+              data-instrument='{"livePreset":"Kit-Core 909","samples":[{"name":"Kick","midi":36,"path":"simplesequencer/909/Kick"},{"name":"Rim","midi":37,"path":"simplesequencer/909/Rim"},{"name":"Snare","midi":38,"path":"simplesequencer/909/Snare"},{"name":"Clap","midi":39,"path":"simplesequencer/909/Clap"},{"name":"Closed Hat","midi":42,"choke":46,"path":"simplesequencer/909/ClosedHat"},{"name":"Open Hat","midi":46,"path":"simplesequencer/909/OpenHat"},{"name":"Tom","midi":48,"path":"simplesequencer/909/TomHi"},{"name":"Ride","midi":51,"path":"simplesequencer/909/Ride"}]}'
+              data-beats='8'
+              data-gridSize='16'
+              data-allowResize='false'
+              data-disableExport=''
+              data-recorder='_theplaygroundplaygrounddrumsrecorder'
+              data-tip=''
+              data-tips='{"playstop":{"@text":"Click this button to start and stop playback."},"createdeletenotes":{"@text":"Click in the grid to create a note. Click an existing note to delete it."},"tempo":{"@text":"Drag the slider to change the tempo."},"overview":{"@text":"Click to focus on a single bar. Click again to see the whole pattern."},"record":{"@text":"Click to start and stop real-time recording. When active, you can record what you play on the pads."},"dragnotes":{"@text":"You can move notes around the grid by clicking and dragging them."},"resizenotes":{"@text":"You can lengthen or shorten notes by dragging on their right edge."},"selectnotes":{"@text":"Click and drag around multiple notes to select them. You can then move them together."},"export":{"@text":"If you make patterns you like, you can export and open them in Ableton Live."},"keyboard":{"@text":"Click here to play these sounds using your keyboard keys."},"drumpad":{"@text":"Click on the pads to play a sound."},"lowhighpitch":{"@text":"Click and drag. Lower pitches are to the left, higher pitches to the right."},"songformsections":{"@text":"Click on the blocks to jump to a particular section of the song."},"devicemute":{"@text":"If you do not hear any sound, check that your device is not muted and that the volume is turned up."},"exportnotsupportedchromeios":{"@text":"Exporting to Live is not available from this browser. Please use Safari if you’d like to export your music from an iOS device.","showalways":true}}'
+              data-highlightedLanes='[]'
+              data-lang='{"@reset":"Reset","@clear":"Clear","@exporttolive":"Export to Live","@exporting":"Exporting","@tempo":"Tempo","@keyboard":"Keyboard","@on":"On","@off":"Off","@close":"Close","@lowpitch":"Low Pitch","@highpitch":"High Pitch","@fillinsolution":"Fill in solution","@incompatiblebrowser":"Your browser can’t display the interactive musical examples on this page.<br>Please use a browser that supports Web Audio such as Chrome, Safari, Firefox, or Edge."}'>
+            </div>
+            <div class="widget-drumpad widget-recordabledrumpad"
+              id='_theplaygroundplaygrounddrumsdrumpad'
+              data-keyboard='12345678'
+              data-kit='{"livePreset":"Kit-Core 909","samples":[{"name":"Kick","midi":36,"path":"simplesequencer/909/Kick"},{"name":"Rim","midi":37,"path":"simplesequencer/909/Rim"},{"name":"Snare","midi":38,"path":"simplesequencer/909/Snare"},{"name":"Clap","midi":39,"path":"simplesequencer/909/Clap"},{"name":"Closed Hat","midi":42,"choke":46,"path":"simplesequencer/909/ClosedHat"},{"name":"Open Hat","midi":46,"path":"simplesequencer/909/OpenHat"},{"name":"Tom","midi":48,"path":"simplesequencer/909/TomHi"},{"name":"Ride","midi":51,"path":"simplesequencer/909/Ride"}]}'
+              data-recorder='_theplaygroundplaygrounddrumsrecorder'
+              data-lang='{"@reset":"Reset","@clear":"Clear","@exporttolive":"Export to Live","@exporting":"Exporting","@tempo":"Tempo","@keyboard":"Keyboard","@on":"On","@off":"Off","@close":"Close","@lowpitch":"Low Pitch","@highpitch":"High Pitch","@fillinsolution":"Fill in solution","@incompatiblebrowser":"Your browser can’t display the interactive musical examples on this page.<br>Please use a browser that supports Web Audio such as Chrome, Safari, Firefox, or Edge."}'>
+            </div>
+          </div></p>
+<h2 id="basslines">Basslines</h2>
+ <div class="widget widget-pianoroll theme-d"
+                id='_theplaygroundplaygroundbass'
+                data-material='tonal'
+                data-tempo='85'
+                data-onPlay='join'
+                data-targetState=''
+                data-defaultState=''
+                data-lanes='[]'
+                data-beats='8'
+                data-gridSize='16'
+                data-allowResize='true'
+                data-disableExport=''
+                data-instrument='{"livePreset":"Boffner Bass","fadeout":{"duration":0.1,"offset":0},"samples":[{"midi":24,"path":"boffner/boffner1"},{"midi":36,"path":"boffner/boffner2"}]}'
+                data-showTempoSlider=''
+                data-showRootChooser='yes'
+                data-showScaleChooser='yes'
+                data-availableScales='Major/Ionian,Minor/Aeolian,Dorian,Phrygian,Lydian,Mixolydian,Locrian'
+                data-defaultScale='Major/Ionian'
+                data-defaultRoot='C'
+                data-defaultOctave='2'
+                data-defaultOctaveCount='2'
+                data-tip=''
+                data-tips='{"playstop":{"@text":"Click this button to start and stop playback."},"createdeletenotes":{"@text":"Click in the grid to create a note. Click an existing note to delete it."},"tempo":{"@text":"Drag the slider to change the tempo."},"overview":{"@text":"Click to focus on a single bar. Click again to see the whole pattern."},"record":{"@text":"Click to start and stop real-time recording. When active, you can record what you play on the pads."},"dragnotes":{"@text":"You can move notes around the grid by clicking and dragging them."},"resizenotes":{"@text":"You can lengthen or shorten notes by dragging on their right edge."},"selectnotes":{"@text":"Click and drag around multiple notes to select them. You can then move them together."},"export":{"@text":"If you make patterns you like, you can export and open them in Ableton Live."},"keyboard":{"@text":"Click here to play these sounds using your keyboard keys."},"drumpad":{"@text":"Click on the pads to play a sound."},"lowhighpitch":{"@text":"Click and drag. Lower pitches are to the left, higher pitches to the right."},"songformsections":{"@text":"Click on the blocks to jump to a particular section of the song."},"devicemute":{"@text":"If you do not hear any sound, check that your device is not muted and that the volume is turned up."},"exportnotsupportedchromeios":{"@text":"Exporting to Live is not available from this browser. Please use Safari if you’d like to export your music from an iOS device.","showalways":true}}'
+                data-highlightedLanes='[0,7,14]'
+                data-lang='{"@reset":"Reset","@clear":"Clear","@exporttolive":"Export to Live","@exporting":"Exporting","@tempo":"Tempo","@keyboard":"Keyboard","@on":"On","@off":"Off","@close":"Close","@lowpitch":"Low Pitch","@highpitch":"High Pitch","@fillinsolution":"Fill in solution","@incompatiblebrowser":"Your browser can’t display the interactive musical examples on this page.<br>Please use a browser that supports Web Audio such as Chrome, Safari, Firefox, or Edge."}'
+                >
+           </div>
+
+
+<h2 id="chords">Chords</h2>
+ <div class="widget widget-pianoroll theme-c"
+                id='_theplaygroundplaygroundpiano'
+                data-material='tonal'
+                data-tempo='85'
+                data-onPlay='join'
+                data-targetState=''
+                data-defaultState=''
+                data-lanes='[]'
+                data-beats='8'
+                data-gridSize='16'
+                data-allowResize='true'
+                data-disableExport=''
+                data-instrument='{"livePreset":"Grand Piano","fadeout":{"duration":0.4,"offset":0},"samples":[{"midi":24,"path":"piano/C1v10"},{"midi":30,"path":"piano/Fs1v10"},{"midi":36,"path":"piano/C2v10"},{"midi":42,"path":"piano/Fs2v10"},{"midi":48,"path":"piano/C3v10"},{"midi":54,"path":"piano/Fs3v10"},{"midi":60,"path":"piano/C4v10"},{"midi":66,"path":"piano/Fs4v10"},{"midi":72,"path":"piano/C5v10"},{"midi":78,"path":"piano/Fs5v10"},{"midi":84,"path":"piano/C6v10"},{"midi":90,"path":"piano/Fs6v10"},{"midi":96,"path":"piano/C7v10"},{"midi":102,"path":"piano/Fs7v10"},{"midi":108,"path":"piano/C8v10"}]}'
+                data-showTempoSlider=''
+                data-showRootChooser='yes'
+                data-showScaleChooser='yes'
+                data-availableScales='Major/Ionian,Minor/Aeolian,Dorian,Phrygian,Lydian,Mixolydian,Locrian'
+                data-defaultScale='Major/Ionian'
+                data-defaultRoot='C'
+                data-defaultOctave='5'
+                data-defaultOctaveCount='2'
+                data-tip=''
+                data-tips='{"playstop":{"@text":"Click this button to start and stop playback."},"createdeletenotes":{"@text":"Click in the grid to create a note. Click an existing note to delete it."},"tempo":{"@text":"Drag the slider to change the tempo."},"overview":{"@text":"Click to focus on a single bar. Click again to see the whole pattern."},"record":{"@text":"Click to start and stop real-time recording. When active, you can record what you play on the pads."},"dragnotes":{"@text":"You can move notes around the grid by clicking and dragging them."},"resizenotes":{"@text":"You can lengthen or shorten notes by dragging on their right edge."},"selectnotes":{"@text":"Click and drag around multiple notes to select them. You can then move them together."},"export":{"@text":"If you make patterns you like, you can export and open them in Ableton Live."},"keyboard":{"@text":"Click here to play these sounds using your keyboard keys."},"drumpad":{"@text":"Click on the pads to play a sound."},"lowhighpitch":{"@text":"Click and drag. Lower pitches are to the left, higher pitches to the right."},"songformsections":{"@text":"Click on the blocks to jump to a particular section of the song."},"devicemute":{"@text":"If you do not hear any sound, check that your device is not muted and that the volume is turned up."},"exportnotsupportedchromeios":{"@text":"Exporting to Live is not available from this browser. Please use Safari if you’d like to export your music from an iOS device.","showalways":true}}'
+                data-highlightedLanes='[0,7,14]'
+                data-lang='{"@reset":"Reset","@clear":"Clear","@exporttolive":"Export to Live","@exporting":"Exporting","@tempo":"Tempo","@keyboard":"Keyboard","@on":"On","@off":"Off","@close":"Close","@lowpitch":"Low Pitch","@highpitch":"High Pitch","@fillinsolution":"Fill in solution","@incompatiblebrowser":"Your browser can’t display the interactive musical examples on this page.<br>Please use a browser that supports Web Audio such as Chrome, Safari, Firefox, or Edge."}'
+                >
+           </div>
+
+
+<h2 id="melodies">Melodies</h2>
+ <div class="widget widget-pianoroll theme-e"
+                id='_theplaygroundplaygroundsynth'
+                data-material='tonal'
+                data-tempo='85'
+                data-onPlay='join'
+                data-targetState=''
+                data-defaultState=''
+                data-lanes='[]'
+                data-beats='8'
+                data-gridSize='16'
+                data-allowResize='true'
+                data-disableExport=''
+                data-instrument='{"livePreset":"Chiffy Sinusoid Lead","fadeout":{"duration":0.06,"offset":0.05},"samples":[{"midi":48,"path":"sinelead/sinelead1"},{"midi":60,"path":"sinelead/sinelead2"},{"midi":72,"path":"sinelead/sinelead3"},{"midi":84,"path":"sinelead/sinelead4"}]}'
+                data-showTempoSlider=''
+                data-showRootChooser='yes'
+                data-showScaleChooser='yes'
+                data-availableScales='Major/Ionian,Minor/Aeolian,Dorian,Phrygian,Lydian,Mixolydian,Locrian'
+                data-defaultScale='Major/Ionian'
+                data-defaultRoot='C'
+                data-defaultOctave='5'
+                data-defaultOctaveCount='2'
+                data-tip=''
+                data-tips='{"playstop":{"@text":"Click this button to start and stop playback."},"createdeletenotes":{"@text":"Click in the grid to create a note. Click an existing note to delete it."},"tempo":{"@text":"Drag the slider to change the tempo."},"overview":{"@text":"Click to focus on a single bar. Click again to see the whole pattern."},"record":{"@text":"Click to start and stop real-time recording. When active, you can record what you play on the pads."},"dragnotes":{"@text":"You can move notes around the grid by clicking and dragging them."},"resizenotes":{"@text":"You can lengthen or shorten notes by dragging on their right edge."},"selectnotes":{"@text":"Click and drag around multiple notes to select them. You can then move them together."},"export":{"@text":"If you make patterns you like, you can export and open them in Ableton Live."},"keyboard":{"@text":"Click here to play these sounds using your keyboard keys."},"drumpad":{"@text":"Click on the pads to play a sound."},"lowhighpitch":{"@text":"Click and drag. Lower pitches are to the left, higher pitches to the right."},"songformsections":{"@text":"Click on the blocks to jump to a particular section of the song."},"devicemute":{"@text":"If you do not hear any sound, check that your device is not muted and that the volume is turned up."},"exportnotsupportedchromeios":{"@text":"Exporting to Live is not available from this browser. Please use Safari if you’d like to export your music from an iOS device.","showalways":true}}'
+                data-highlightedLanes='[0,7,14]'
+                data-lang='{"@reset":"Reset","@clear":"Clear","@exporttolive":"Export to Live","@exporting":"Exporting","@tempo":"Tempo","@keyboard":"Keyboard","@on":"On","@off":"Off","@close":"Close","@lowpitch":"Low Pitch","@highpitch":"High Pitch","@fillinsolution":"Fill in solution","@incompatiblebrowser":"Your browser can’t display the interactive musical examples on this page.<br>Please use a browser that supports Web Audio such as Chrome, Safari, Firefox, or Edge."}'
+                >
+           </div>
+
+
+      </div>
+    </div>
+
+    <div class="container mx-auto">
+      <footer class="main-footer">
+        <script type="text/javascript">
+        function reset_all() {
+          localStorage.clear();
+          location.reload();
+        }
+        </script>
+        <ul class="list-reset medium color--secondary">
+          <li class="ribbon__element ribbon__element--padded"><span class="label color--base bg--secondary">Beta</span> <a href="mailto:learning@ableton.com?subject=learningmusic.ableton.com">Send us your feedback!</a></li>
+      
+          <li class="ribbon__element ribbon__element--padded">
+            <div class="lang-chooser" style="display: flex; flex-wrap: wrap; flex-basis: max-content">
+              <style>
+                .lang-chooser .selected {
+                  color: #fff;
+                }
+            
+                .lang-chooser a  {
+                  margin-right: 15px;
+                }
+              </style>
+            
+                  <a
+                  data-value="en"
+                  class="selected lang--en"
+                  href="javascript:switchLanguage('en')"
+                  >English</a>
+                  <a
+                  data-value="zh-Hans"
+                  class=" lang--zh-Hans"
+                  href="javascript:switchLanguage('zh-Hans')"
+                  >简体中文</a>
+                  <a
+                  data-value="zh-Hant"
+                  class=" lang--zh-Hant"
+                  href="javascript:switchLanguage('zh-Hant')"
+                  >繁體中文</a>
+                  <a
+                  data-value="de"
+                  class=" lang--de"
+                  href="javascript:switchLanguage('de')"
+                  >Deutsch</a>
+                  <a
+                  data-value="es"
+                  class=" lang--es"
+                  href="javascript:switchLanguage('es')"
+                  >Español</a>
+                  <a
+                  data-value="fr"
+                  class=" lang--fr"
+                  href="javascript:switchLanguage('fr')"
+                  >Français</a>
+                  <a
+                  data-value="id"
+                  class=" lang--id"
+                  href="javascript:switchLanguage('id')"
+                  >Bahasa Indonesia</a>
+                  <a
+                  data-value="it"
+                  class=" lang--it"
+                  href="javascript:switchLanguage('it')"
+                  >Italiano</a>
+                  <a
+                  data-value="ja"
+                  class=" lang--ja"
+                  href="javascript:switchLanguage('ja')"
+                  >日本語</a>
+                  <a
+                  data-value="ko"
+                  class=" lang--ko"
+                  href="javascript:switchLanguage('ko')"
+                  >한국어</a>
+                  <a
+                  data-value="nl"
+                  class=" lang--nl"
+                  href="javascript:switchLanguage('nl')"
+                  >Nederlands</a>
+                  <a
+                  data-value="ru"
+                  class=" lang--ru"
+                  href="javascript:switchLanguage('ru')"
+                  >Pусский</a>
+                  <a
+                  data-value="th"
+                  class=" lang--th"
+                  href="javascript:switchLanguage('th')"
+                  >ไทย</a>
+                  <a
+                  data-value="vi"
+                  class=" lang--vi"
+                  href="javascript:switchLanguage('vi')"
+                  >Tiếng Việt</a>
+            
+              <script type="text/javascript">
+                function switchLanguage(locale) {
+                  var currentPageLocale = "";
+            
+                  var pathname = window.location.pathname;
+                  var pathnameWithoutLocale = currentPageLocale
+                    ? pathname.substr(currentPageLocale.length + 1)
+                    : pathname;
+            
+                  var localeString = locale === "en"
+                    ? ""
+                    : "/" + locale;
+            
+                  var newURL = localeString + pathnameWithoutLocale;
+                  window.location.assign(newURL);
+                }
+              </script>
+            </div>
+          </li>
+      
+          <li class="ribbon__element ribbon__element--padded">
+          <button class="btn--reset reset-button" onclick="reset_all();">Reset all lessons</button>
+          </li>
+      
+          <li class="ribbon__element ribbon__element--padded"><a href="https://www.ableton.com/" class="ml-auto">Go to Ableton.com ›</a></li>
+          <li class="ribbon__element ribbon__element--padded"><a href="https://www.ableton.com/privacy-policy" class="ml-auto">Privacy Policy ›</a></li>
+        </ul>
+      </footer>
+    </div>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          var widgets = document.getElementsByClassName("widget-drumpad");
+          Array.from(widgets).forEach(function(e) {
+            window[e.id] = new SimpleDrumpad();
+            window[e.id].init({
+              widgetId: e.id,
+              keyboard: e.getAttribute('data-keyboard'),
+              kit: JSON.parse(e.getAttribute('data-kit')),
+              recorder: window[e.getAttribute('data-recorder')],
+              tips: JSON.parse(e.getAttribute('data-tips')),
+              tip: e.getAttribute('data-tip'),
+              lang: JSON.parse(e.getAttribute('data-lang'))
+            })
+          })
+        });
+      </script>
+      <script src="https://learningmusic.ableton.com/widgets/build/SimplePianoRoll.js"></script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          var sequencers = document.getElementsByClassName("widget-pianoroll");
+          Array.from(sequencers).forEach(function(e) {
+            window[e.id] = new SimplePianoRoll();
+            window[e.id].init({
+              widgetId: e.id,
+              material: e.getAttribute('data-material'),
+              tempo: e.getAttribute('data-tempo'),
+              onPlay: e.getAttribute('data-onplay'),
+              targetState: e.getAttribute('data-targetstate'),
+              defaultState: e.getAttribute('data-defaultstate'),
+              lanes: JSON.parse(e.getAttribute('data-lanes')),
+              beats: parseInt(e.getAttribute('data-beats')),
+              gridSize: parseInt(e.getAttribute('data-gridsize')),
+              allowResize: e.getAttribute('data-allowresize') == "true",
+              disableExport: e.getAttribute('data-disableexport'),
+              instrument: JSON.parse(e.getAttribute('data-instrument')),
+              showTempoSlider: e.getAttribute('data-showtemposlider'),
+              showRootChooser: e.getAttribute('data-showrootchooser'),
+              showScaleChooser: e.getAttribute('data-showscalechooser'),
+              availableScales: e.getAttribute('data-availablescales'),
+              defaultScale: e.getAttribute('data-defaultscale'),
+              defaultRoot: e.getAttribute('data-defaultroot'),
+              defaultOctave: e.getAttribute('data-defaultoctave'),
+              defaultOctaveCount: e.getAttribute('data-defaultoctavecount'),
+              recorder: window[e.getAttribute('data-recorder')],
+              exporter: EXPORTER,
+              tip: e.getAttribute('data-tip'),
+              tips: JSON.parse(e.getAttribute('data-tips')),
+              highlightedLanes: JSON.parse(e.getAttribute('data-highlightedlanes')),
+              lang: JSON.parse(e.getAttribute('data-lang'))
+            })
+          })
+      
+        });
+      </script>
+  </body>
+</html>
