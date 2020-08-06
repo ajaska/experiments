@@ -1,5 +1,7 @@
 boffner/boffner1
 boffner/boffner2
+metronome/MetronomeUp
+metronome/Metronome
 piano/C1v10
 piano/C2v10
 piano/C3v10
