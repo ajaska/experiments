@@ -1,17 +1,8 @@
-
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Explore the fundamentals of music via Ableton's interactive website. Experiment with beats, melody, harmony, basslines, and song structure in your web browser.">
-  
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="https://learningmusic.ableton.com/images/og-image.jpg">
-  
-    <meta property="ix:host" content="ableton-learningmusic.imgix.net">
-    <meta property="ix:useHttps" content="true">
   
     <title> The playground | Learning Music (Beta)</title>
   
@@ -74,36 +65,7 @@
           <div class="ribbon__element main-header__title">
             The playground
           </div>
-          <div class="ribbon__element main-header__logo">
-            <a href="https://www.ableton.com/">
-              <svg class="main-header__logo__icon" width="60px" height="28px" viewBox="0 0 60 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <g fill-rule="nonzero" fill="#FFFFFF">
-                  <rect id="Rectangle-path" x="0" y="0" width="4" height="28"></rect>
-                  <rect id="Rectangle-path" x="8" y="0" width="4" height="28"></rect>
-                  <rect id="Rectangle-path" x="16" y="0" width="4" height="28"></rect>
-                  <rect id="Rectangle-path" x="24" y="0" width="4" height="28"></rect>
-                  <rect id="Rectangle-path" x="32" y="24" width="28" height="4"></rect>
-                  <rect id="Rectangle-path" x="32" y="16" width="28" height="4"></rect>
-                  <rect id="Rectangle-path" x="32" y="8" width="28" height="4"></rect>
-                  <rect id="Rectangle-path" x="32" y="0" width="28" height="4"></rect>
-                </g>
-              </svg>
-            </a>
-          </div>
         </div>
-      
-        <div class="nav-title">
-        <button aria-label="Toggle navigation" tabindex="0" class="btn nav-title__button js-toggle-nav">
-          <span class="nav-title__content">
-            <span class="nav-title__icon-wrapper">
-              <img width="26" alt="" src="https://learningmusic.ableton.com/images/icons/chapters.svg" class="nav-title__icon nav-title__icon--open">
-              <img width="26" alt="" src="https://learningmusic.ableton.com/images/icons/close.svg" class="nav-title__icon nav-title__icon--close">
-            </span>
-            <span class="nav-title__label ">Chapters</span>
-          </span>
-        </button>
-      </div>
-      
       </header>
     </div>
 
@@ -238,122 +200,14 @@
       <footer class="main-footer">
         <script type="text/javascript">
         function reset_all() {
-          localStorage.clear();
-          location.reload();
+          /*localStorage.clear();
+          location.reload();*/
         }
         </script>
         <ul class="list-reset medium color--secondary">
-          <li class="ribbon__element ribbon__element--padded"><span class="label color--base bg--secondary">Beta</span> <a href="mailto:learning@ableton.com?subject=learningmusic.ableton.com">Send us your feedback!</a></li>
-      
           <li class="ribbon__element ribbon__element--padded">
-            <div class="lang-chooser" style="display: flex; flex-wrap: wrap; flex-basis: max-content">
-              <style>
-                .lang-chooser .selected {
-                  color: #fff;
-                }
-            
-                .lang-chooser a  {
-                  margin-right: 15px;
-                }
-              </style>
-            
-                  <a
-                  data-value="en"
-                  class="selected lang--en"
-                  href="javascript:switchLanguage('en')"
-                  >English</a>
-                  <a
-                  data-value="zh-Hans"
-                  class=" lang--zh-Hans"
-                  href="javascript:switchLanguage('zh-Hans')"
-                  >简体中文</a>
-                  <a
-                  data-value="zh-Hant"
-                  class=" lang--zh-Hant"
-                  href="javascript:switchLanguage('zh-Hant')"
-                  >繁體中文</a>
-                  <a
-                  data-value="de"
-                  class=" lang--de"
-                  href="javascript:switchLanguage('de')"
-                  >Deutsch</a>
-                  <a
-                  data-value="es"
-                  class=" lang--es"
-                  href="javascript:switchLanguage('es')"
-                  >Español</a>
-                  <a
-                  data-value="fr"
-                  class=" lang--fr"
-                  href="javascript:switchLanguage('fr')"
-                  >Français</a>
-                  <a
-                  data-value="id"
-                  class=" lang--id"
-                  href="javascript:switchLanguage('id')"
-                  >Bahasa Indonesia</a>
-                  <a
-                  data-value="it"
-                  class=" lang--it"
-                  href="javascript:switchLanguage('it')"
-                  >Italiano</a>
-                  <a
-                  data-value="ja"
-                  class=" lang--ja"
-                  href="javascript:switchLanguage('ja')"
-                  >日本語</a>
-                  <a
-                  data-value="ko"
-                  class=" lang--ko"
-                  href="javascript:switchLanguage('ko')"
-                  >한국어</a>
-                  <a
-                  data-value="nl"
-                  class=" lang--nl"
-                  href="javascript:switchLanguage('nl')"
-                  >Nederlands</a>
-                  <a
-                  data-value="ru"
-                  class=" lang--ru"
-                  href="javascript:switchLanguage('ru')"
-                  >Pусский</a>
-                  <a
-                  data-value="th"
-                  class=" lang--th"
-                  href="javascript:switchLanguage('th')"
-                  >ไทย</a>
-                  <a
-                  data-value="vi"
-                  class=" lang--vi"
-                  href="javascript:switchLanguage('vi')"
-                  >Tiếng Việt</a>
-            
-              <script type="text/javascript">
-                function switchLanguage(locale) {
-                  var currentPageLocale = "";
-            
-                  var pathname = window.location.pathname;
-                  var pathnameWithoutLocale = currentPageLocale
-                    ? pathname.substr(currentPageLocale.length + 1)
-                    : pathname;
-            
-                  var localeString = locale === "en"
-                    ? ""
-                    : "/" + locale;
-            
-                  var newURL = localeString + pathnameWithoutLocale;
-                  window.location.assign(newURL);
-                }
-              </script>
-            </div>
+          <button class="btn--reset reset-button" onclick="reset_all();">Reset all (currently disabled)</button>
           </li>
-      
-          <li class="ribbon__element ribbon__element--padded">
-          <button class="btn--reset reset-button" onclick="reset_all();">Reset all lessons</button>
-          </li>
-      
-          <li class="ribbon__element ribbon__element--padded"><a href="https://www.ableton.com/" class="ml-auto">Go to Ableton.com ›</a></li>
-          <li class="ribbon__element ribbon__element--padded"><a href="https://www.ableton.com/privacy-policy" class="ml-auto">Privacy Policy ›</a></li>
         </ul>
       </footer>
     </div>
