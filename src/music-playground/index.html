@@ -216,23 +216,6 @@
       </footer>
     </div>
 
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          var widgets = document.getElementsByClassName("widget-drumpad");
-          Array.from(widgets).forEach(function(e) {
-            window[e.id] = new SimpleDrumpad();
-            window[e.id].init({
-              widgetId: e.id,
-              keyboard: e.getAttribute('data-keyboard'),
-              kit: JSON.parse(e.getAttribute('data-kit')),
-              recorder: window[e.getAttribute('data-recorder')],
-              tips: JSON.parse(e.getAttribute('data-tips')),
-              tip: e.getAttribute('data-tip'),
-              lang: JSON.parse(e.getAttribute('data-lang'))
-            })
-          })
-        });
-      </script>
       <script src="https://learningmusic.ableton.com/widgets/build/SimplePianoRoll.js"></script>
       <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -267,8 +250,21 @@
               highlightedLanes: JSON.parse(e.getAttribute('data-highlightedlanes')),
               lang: JSON.parse(e.getAttribute('data-lang'))
             })
-          })
-      
+          });
+
+          var widgets = document.getElementsByClassName("widget-drumpad");
+          Array.from(widgets).forEach(function(e) {
+            window[e.id] = new SimpleDrumpad();
+            window[e.id].init({
+              widgetId: e.id,
+              keyboard: e.getAttribute('data-keyboard'),
+              kit: JSON.parse(e.getAttribute('data-kit')),
+              recorder: window[e.getAttribute('data-recorder')],
+              tips: JSON.parse(e.getAttribute('data-tips')),
+              tip: e.getAttribute('data-tip'),
+              lang: JSON.parse(e.getAttribute('data-lang'))
+            })
+          });
         });
       </script>
   </body>
