@@ -18,7 +18,7 @@
     "create-hash": "^1.2.0",
     "eslint": "^6.8.0",
     "fingerprintjs2": "^2.1.2",
-    "immer": "^7.0.5",
+    "immer": "^8.0.1",
     "lodash.throttle": "^4.1.1",
     "meyda": "^5.0.3",
     "moment": "^2.27.0",
